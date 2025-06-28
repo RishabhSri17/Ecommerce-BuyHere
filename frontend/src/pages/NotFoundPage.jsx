@@ -1,22 +1,19 @@
 import React from 'react';
-import { Container, Col, Button } from 'react-bootstrap';
 import Meta from '../components/Meta';
 
 const NotFoundPage = () => {
   return (
-    <Container className='position-absolute top-50 start-50 translate-middle'>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <Meta title={'404 Not Found'} />
-      <Col className='text-center'>
-        <h1 className='display-1 fw-bold'>404</h1>
-        <p className='fs-3'>
-          <span className='text-danger'>Opps!</span> Page not found.
+      <div className="text-center bg-white p-8 rounded shadow-md">
+        <h1 className="text-7xl font-extrabold text-yellow-500 mb-4">404</h1>
+        <p className="text-2xl mb-2">
+          <span className="text-red-500 font-bold">Oops!</span> Page not found.
         </p>
-        <p className='lead'>The page you’re looking for doesn’t exist.</p>
-        <Button href='/' variant='primary'>
-          Go Home
-        </Button>
-      </Col>
-    </Container>
+        <p className="text-lg mb-6">The page you’re looking for doesn’t exist.</p>
+        <a href="/" className="inline-block bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-6 py-2 rounded transition">Go Home</a>
+      </div>
+    </div>
   );
 };
 

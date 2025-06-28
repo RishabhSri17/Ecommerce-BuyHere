@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Button, Form } from 'react-bootstrap';
 import { useNewPasswordRequestMutation } from '../slices/usersApiSlice';
 import FormContainer from '../components/FormContainer';
 import Meta from '../components/Meta';
@@ -11,7 +10,6 @@ const ResetPasswordRequestPage = () => {
   const [message, setMessage] = useState('');
 
   const [requestNewPassword, { isLoading }] = useNewPasswordRequestMutation();
-  // console.log(useNewPasswordRequestMutation());
   const handleSubmit = async e => {
     e.preventDefault();
     try {
@@ -26,27 +24,31 @@ const ResetPasswordRequestPage = () => {
   return (
     <FormContainer>
       <Meta title={'Request New Password'} />
-      <h1>Request New Password</h1>
+      <h1 className="text-2xl font-bold mb-6">Request New Password</h1>
       {message && <Message>{message}</Message>}
-      <Form onSubmit={handleSubmit}>
-        <Form.Group className='mb-3' controlId='email'>
-          <Form.Label>Email address</Form.Label>
-          <Form.Control
-            type='email'
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label htmlFor="email" className="block font-medium mb-1">
+            Email address
+          </label>
+          <input
+            type="email"
+            id="email"
+            className="w-full border rounded px-3 py-2"
             value={email}
-            placeholder='Enter email'
+            placeholder="Enter email"
             onChange={e => setEmail(e.target.value)}
+            required
           />
-        </Form.Group>
-        <Button
-          className='mb-3 w-100'
-          variant='warning'
-          type='submit'
+        </div>
+        <button
+          type="submit"
+          className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 rounded"
           disabled={isLoading}
         >
-          Submit
-        </Button>
-      </Form>
+          {isLoading ? 'Requesting...' : 'Request Password Reset'}
+        </button>
+      </form>
     </FormContainer>
   );
 };

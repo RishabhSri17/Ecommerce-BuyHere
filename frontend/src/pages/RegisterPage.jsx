@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Form, Button, Row, Col, InputGroup } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { useRegisterMutation } from '../slices/usersApiSlice';
 import { setCredentials } from '../slices/authSlice';
@@ -47,97 +46,95 @@ const RegisterPage = () => {
     if (password !== confirmPassword) {
       toast.error('Passwords do not match!');
       return;
-    } else {
-      try {
-        const res = await register({ name, email, password }).unwrap();
-        dispatch(setCredentials({ ...res }));
-        navigate(redirect);
-        toast.success('Registration successful. Welcome!');
-      } catch (error) {
-        toast.error(error?.data?.message || error.error);
-      }
+    }
+    try {
+      const res = await register({ name, email, password }).unwrap();
+      dispatch(setCredentials({ ...res }));
+      navigate(redirect);
+    } catch (error) {
+      toast.error(error?.data?.message || error.error);
     }
   };
 
   return (
     <FormContainer>
       <Meta title={'Register'} />
-      <h1>Register</h1>
-      <Form onSubmit={submitHandler}>
-        <Form.Group className='mb-3' controlId='name'>
-          <Form.Label>Name</Form.Label>
-          <Form.Control
+      <h1 className="text-2xl font-bold mb-6">Sign Up</h1>
+      <form onSubmit={submitHandler} className="space-y-4">
+        <div>
+          <label htmlFor="name" className="block font-medium mb-1">Name</label>
+          <input
+            type="text"
+            id="name"
+            className="w-full border rounded px-3 py-2"
             value={name}
-            type='text'
-            placeholder='Enter name'
+            placeholder="Enter name"
             onChange={e => setName(e.target.value)}
+            required
           />
-        </Form.Group>
-        <Form.Group className='mb-3' controlId='email'>
-          <Form.Label>Email address</Form.Label>
-          <Form.Control
+        </div>
+        <div>
+          <label htmlFor="email" className="block font-medium mb-1">Email address</label>
+          <input
+            type="email"
+            id="email"
+            className="w-full border rounded px-3 py-2"
             value={email}
-            type='email'
-            placeholder='Enter email'
+            placeholder="Enter email"
             onChange={e => setEmail(e.target.value)}
+            required
           />
-        </Form.Group>
-        <Form.Group className='mb-3' controlId='password'>
-          <Form.Label>Password</Form.Label>
-          <InputGroup>
-            <Form.Control
+        </div>
+        <div>
+          <label htmlFor="password" className="block font-medium mb-1">Password</label>
+          <div className="relative">
+            <input
               type={showPassword ? 'text' : 'password'}
+              id="password"
+              className="w-full border rounded px-3 py-2 pr-10"
               value={password}
-              placeholder='Enter password'
+              placeholder="Enter password"
               onChange={e => setPassword(e.target.value)}
+              required
             />
-            <InputGroup.Text
+            <span
+              className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
               onClick={togglePasswordVisibility}
-              id='togglePasswordVisibility'
-              style={{ cursor: 'pointer' }}
             >
-              {showPassword ? <FaEye /> : <FaEyeSlash />}
-            </InputGroup.Text>
-          </InputGroup>
-        </Form.Group>
-        <Form.Group className='mb-3' controlId='confirmPassword'>
-          <Form.Label>Confirm Password</Form.Label>
-          <InputGroup>
-            <Form.Control
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
+          </div>
+        </div>
+        <div>
+          <label htmlFor="confirmPassword" className="block font-medium mb-1">Confirm Password</label>
+          <div className="relative">
+            <input
               type={showConfirmPassword ? 'text' : 'password'}
+              id="confirmPassword"
+              className="w-full border rounded px-3 py-2 pr-10"
               value={confirmPassword}
-              placeholder='Confirm password'
+              placeholder="Confirm password"
               onChange={e => setConfirmPassword(e.target.value)}
+              required
             />
-            <InputGroup.Text
+            <span
+              className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
               onClick={toggleConfirmPasswordVisibility}
-              id='toggleConfirmPasswordVisibility'
-              style={{ cursor: 'pointer' }}
             >
-              {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
-            </InputGroup.Text>
-          </InputGroup>
-        </Form.Group>
-        <Button
-          className='mb-3 w-100'
-          variant='warning'
-          type='submit'
-          disabled={isLoading}
-        >
-          Register
-        </Button>
-      </Form>
-      <Row>
-        <Col>
-          Already have an account?
-          <Link
-            to={redirect ? `/login?redirect=${redirect}` : '/login'}
-            className=' mx-2'
-          >
-            Sign In
+              {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
+          </div>
+        </div>
+        <button type="submit" className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 rounded" disabled={isLoading}>
+          {isLoading ? 'Signing Up...' : 'Sign Up'}
+        </button>
+        <div className="text-center">
+          Already have an account?{' '}
+          <Link to={redirect ? `/login?redirect=${redirect}` : '/login'} className="text-blue-600 hover:underline">
+            Login
           </Link>
-        </Col>
-      </Row>
+        </div>
+      </form>
     </FormContainer>
   );
 };

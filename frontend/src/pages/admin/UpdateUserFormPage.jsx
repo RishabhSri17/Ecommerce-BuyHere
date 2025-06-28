@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import FormContainer from '../../components/FormContainer';
-import { Button, Form } from 'react-bootstrap';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import {
   useUpdateUserMutation,
@@ -39,19 +38,16 @@ const UpdateUserFormPage = () => {
       const userData = { name, email, isAdmin };
       const { data } = await updateUser({ userId, ...userData });
       toast.success(data.message);
-      navigate('/admin/user-list');
+      navigate('/admin/userlist');
     } catch (error) {
       toast.error(error?.data?.message || error.error);
     }
   };
-  return (
-    <>
-      <Meta title={'User Update Form'} />
 
-      <Link to='/admin/user-list' className='btn btn-light my-3'>
-        Go Back
-      </Link>
-      {isUpdateUserLoading && <Loader />}
+  return (
+    <FormContainer>
+      <Meta title={'Update User'} />
+      <h1 className="text-2xl font-bold mb-6">Update User</h1>
       {isLoading ? (
         <Loader />
       ) : error ? (
@@ -59,44 +55,50 @@ const UpdateUserFormPage = () => {
           {error?.data?.message || error.error}
         </Message>
       ) : (
-        <FormContainer>
-          <Meta title={'Update User'} />
-          <h1>Update user</h1>
-          <Form onSubmit={submitHandler}>
-            <Form.Group className='mb-3' controlId='name'>
-              <Form.Label>Name</Form.Label>
-              <Form.Control
-                value={name}
-                type='text'
-                placeholder='Enter name'
-                onChange={e => setName(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group className='mb-3' controlId='email'>
-              <Form.Label>Email address</Form.Label>
-              <Form.Control
-                value={email}
-                type='email'
-                placeholder='Enter email'
-                onChange={e => setEmail(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group className='mb-3' controlId='isAdmin'>
-              <Form.Check
-                type='checkbox'
-                label='is Admin'
-                checked={isAdmin}
-                onChange={e => setIsAdmin(e.target.checked)}
-              />
-            </Form.Group>
-
-            <Button className='mb-3' variant='primary' type='submit'>
-              Update
-            </Button>
-          </Form>
-        </FormContainer>
+        <form onSubmit={submitHandler} className="space-y-4">
+          <div>
+            <label htmlFor="name" className="block font-medium mb-1">Name</label>
+            <input
+              type="text"
+              id="name"
+              className="w-full border rounded px-3 py-2"
+              value={name}
+              placeholder="Enter name"
+              onChange={e => setName(e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="email" className="block font-medium mb-1">Email address</label>
+            <input
+              type="email"
+              id="email"
+              className="w-full border rounded px-3 py-2"
+              value={email}
+              placeholder="Enter email"
+              onChange={e => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              id="isAdmin"
+              checked={isAdmin}
+              onChange={e => setIsAdmin(e.target.checked)}
+              className="mr-2"
+            />
+            <label htmlFor="isAdmin" className="text-sm">Is Admin</label>
+          </div>
+          <button type="submit" className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 rounded" disabled={isUpdateUserLoading}>
+            {isUpdateUserLoading ? 'Updating...' : 'Update'}
+          </button>
+          <div className="text-center">
+            <Link to="/admin/userlist" className="text-blue-600 hover:underline">Back to User List</Link>
+          </div>
+        </form>
       )}
-    </>
+    </FormContainer>
   );
 };
 

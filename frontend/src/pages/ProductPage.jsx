@@ -1,15 +1,4 @@
 import React, { useState } from 'react';
-
-import {
-  Row,
-  Col,
-  ListGroup,
-  Button,
-  Image,
-  Card,
-  Form,
-  ListGroupItem
-} from 'react-bootstrap';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -68,6 +57,16 @@ const ProductPage = () => {
     setRating(0);
     setComment('');
   };
+
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const getImageUrl = (image) => {
+    if (!image) return '';
+    if (image.startsWith('/uploads/')) {
+      return `${backendUrl}${image}`;
+    }
+    return image;
+  };
+
   return (
     <>
       {isLoading ? (
@@ -78,119 +77,85 @@ const ProductPage = () => {
         </Message>
       ) : (
         <>
-          <Link to='/' className='btn btn-light my-3'>
+          <Link to='/' className='inline-block bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded mb-4'>
             Go Back
           </Link>
-          <Meta title={product.name} description={product.description} />
-          <Row>
-            <Col md={5}>
-              <Image src={product.image} alt={product.name} fluid />
-              <Row className='review d-none d-md-block'>
-                <Col>
-                  <Reviews
-                    product={product}
-                    userInfo={userInfo}
-                    rating={rating}
-                    laoding={isCreateProductReviewLoading}
-                    setRating={setRating}
-                    comment={comment}
-                    setComment={setComment}
-                    submitHandler={submitHandler}
-                  />
-                </Col>
-              </Row>
-            </Col>
-            <Col md={4}>
-              <ListGroup variant='flush'>
-                <ListGroup.Item>
-                  <h3>{product.name}</h3>
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <Rating
-                    value={product.rating}
-                    text={`${product.numReviews} reviews`}
-                  />
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  Price: {addCurrency(product.price)}
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <strong> About this item:</strong>
-                  {product.description}
-                </ListGroup.Item>
-              </ListGroup>
-            </Col>
-            <Col md={3}>
-              <Card>
-                <ListGroup variant='flush'>
-                  <ListGroup.Item>
-                    <Row>
-                      <Col>Price:</Col>
-                      <Col>
-                        <strong>{addCurrency(product.price)}</strong>
-                      </Col>
-                    </Row>
-                  </ListGroup.Item>
-                  <ListGroup.Item>
-                    <Row>
-                      <Col>Status:</Col>
-                      <Col>
-                        {product.countInStock > 0 ? 'In Stock' : 'Out Of Stock'}
-                      </Col>
-                    </Row>
-                  </ListGroup.Item>
-                  {product.countInStock > 0 && (
-                    <ListGroup.Item>
-                      <Row>
-                        <Col>Qty:</Col>
-                        <Col>
-                          <Form.Control
-                            as='select'
-                            value={qty}
-                            onChange={e => setQty(Number(e.target.value))}
-                          >
-                            {Array.from(
-                              { length: product.countInStock },
-                              (_, i) => (
-                                <option key={i + 1} value={i + 1}>
-                                  {i + 1}
-                                </option>
-                              )
-                            )}
-                          </Form.Control>
-                        </Col>
-                      </Row>
-                    </ListGroup.Item>
-                  )}
-                  <ListGroupItem>
-                    <Button
-                      className='w-100'
-                      variant='warning'
-                      type='button'
-                      disabled={product.countInStock === 0}
-                      onClick={addToCartHandler}
+          <Meta title={product?.name || 'Product Details'} description={product?.description || ''} />
+          <div className="flex flex-col md:flex-row gap-8">
+            <div className="md:w-2/5">
+              <img src={getImageUrl(product?.image)} alt={product?.name} className="w-full h-auto rounded shadow" />
+              <div className="hidden md:block mt-6">
+                <Reviews
+                  product={product}
+                  userInfo={userInfo}
+                  rating={rating}
+                  laoding={isCreateProductReviewLoading}
+                  setRating={setRating}
+                  comment={comment}
+                  setComment={setComment}
+                  submitHandler={submitHandler}
+                />
+              </div>
+            </div>
+            <div className="md:w-2/5">
+              <div className="bg-white rounded shadow p-6 mb-6">
+                <h3 className="text-xl font-bold mb-2">{product.name}</h3>
+                <div className="mb-2">
+                  <Rating value={product.rating} text={`${product.numReviews} reviews`} />
+                </div>
+                <div className="mb-2 font-semibold">Price: {addCurrency(product.price)}</div>
+                <div className="mb-2"><strong>About this item:</strong> {product.description}</div>
+              </div>
+            </div>
+            <div className="md:w-1/5">
+              <div className="bg-white rounded shadow p-6">
+                <div className="mb-4 flex justify-between">
+                  <span>Price:</span>
+                  <span className="font-bold">{addCurrency(product.price)}</span>
+                </div>
+                <div className="mb-4 flex justify-between">
+                  <span>Status:</span>
+                  <span>{product.countInStock > 0 ? 'In Stock' : 'Out Of Stock'}</span>
+                </div>
+                {product.countInStock > 0 && (
+                  <div className="mb-4 flex justify-between items-center">
+                    <span>Qty:</span>
+                    <select
+                      className="border rounded px-2 py-1"
+                      value={qty}
+                      onChange={e => setQty(Number(e.target.value))}
                     >
-                      Add To Cart
-                    </Button>
-                  </ListGroupItem>
-                </ListGroup>
-              </Card>
-            </Col>
-          </Row>
-          <Row className='review d-block d-md-none'>
-            <Col md={6}>
-              <Reviews
-                product={product}
-                userInfo={userInfo}
-                rating={rating}
-                laoding={isCreateProductReviewLoading}
-                setRating={setRating}
-                comment={comment}
-                setComment={setComment}
-                submitHandler={submitHandler}
-              />
-            </Col>
-          </Row>
+                      {Array.from({ length: product.countInStock }, (_, i) => (
+                        <option key={i + 1} value={i + 1}>
+                          {i + 1}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+                <button
+                  className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 rounded mb-2"
+                  type="button"
+                  disabled={product.countInStock === 0}
+                  onClick={addToCartHandler}
+                >
+                  Add To Cart
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="block md:hidden mt-8">
+            <Reviews
+              product={product}
+              userInfo={userInfo}
+              rating={rating}
+              laoding={isCreateProductReviewLoading}
+              setRating={setRating}
+              comment={comment}
+              setComment={setComment}
+              submitHandler={submitHandler}
+            />
+          </div>
         </>
       )}
     </>

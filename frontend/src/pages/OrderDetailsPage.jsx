@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 
 import { useParams, Link } from 'react-router-dom';
-import { Row, Col, ListGroup, Button, Image, Card } from 'react-bootstrap';
 import {
   useGetOrderDetailsQuery,
   usePayOrderMutation,
@@ -18,26 +17,19 @@ import ServerError from '../components/ServerError';
 import axios from 'axios';
 import Meta from '../components/Meta';
 import { addCurrency } from '../utils/addCurrency';
-// import { RAZORPAY_URL } from '../constants';
+
 const OrderDetailsPage = () => {
   const { id: orderId } = useParams();
-  // console.log(useGetOrderDetailsQuery());
   const { data: order, isLoading, error } = useGetOrderDetailsQuery(orderId);
-
   const [payOrder, { isLoading: isPayOrderLoading }] = usePayOrderMutation();
-  const [updateDeliver, { isLoading: isUpdateDeliverLoading }] =
-    useUpdateDeliverMutation();
-
+  const [updateDeliver, { isLoading: isUpdateDeliverLoading }] = useUpdateDeliverMutation();
   const { userInfo } = useSelector(state => state.auth);
-
   const { data: razorpayApiKey } = useGetRazorpayApiKeyQuery();
 
   const paymentHandler = async e => {
     try {
-      // Make the API call to Razorpay
-
       const razorpayData = {
-        amount: order.totalPrice * 100, // Razorpay expects the amount in paisa, so multiply by 100
+        amount: order.totalPrice * 100,
         currency: 'INR',
         receipt: `receipt#${orderId}`
       };
@@ -45,17 +37,15 @@ const OrderDetailsPage = () => {
         '/api/v1/payment/razorpay/order',
         razorpayData
       );
-
       const { id: razorpayOrderId } = data;
-
       const options = {
-        key: razorpayApiKey.razorpayKeyId, // Enter the Key ID generated from the Dashboard
-        amount: razorpayData.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        key: razorpayApiKey.razorpayKeyId,
+        amount: razorpayData.amount,
         currency: razorpayData.currency,
-        name: 'MERN Shop', //your business name
+        name: 'MERN Shop',
         description: 'Test Transaction',
         image: 'https://example.com/your_logo',
-        order_id: razorpayOrderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+        order_id: razorpayOrderId,
         handler: async response => {
           try {
             const { data } = await axios.post(
@@ -70,10 +60,8 @@ const OrderDetailsPage = () => {
           }
         },
         prefill: {
-          //We recommend using the prefill parameter to auto-fill customer's contact information, especially their phone number
-          name: order?.user?.name, //your customer's name
+          name: order?.user?.name,
           email: order?.user?.email
-          // contact: '9000090000' //Provide the customer's phone number for better conversion rates
         },
         notes: {
           address: 'MERN Shop Office'
@@ -84,17 +72,6 @@ const OrderDetailsPage = () => {
       };
       var rzp1 = new window.Razorpay(options);
       rzp1.open();
-      // e.preventDefault();
-
-      // rzp1.on('payment.failed', response => {
-      //   alert(response.error.code);
-      //   alert(response.error.description);
-      //   alert(response.error.source);
-      //   alert(response.error.step);
-      //   alert(response.error.reason);
-      //   alert(response.error.metadata.order_id);
-      //   alert(response.error.metadata.payment_id);
-      // });
     } catch (error) {
       toast.error(error?.data?.message || error.error);
     }
@@ -109,6 +86,15 @@ const OrderDetailsPage = () => {
     }
   };
 
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const getImageUrl = image => {
+    if (!image) return '';
+    if (image.startsWith('/uploads/')) {
+      return `${backendUrl}${image}`;
+    }
+    return image;
+  };
+
   return (
     <>
       {isLoading ? (
@@ -120,142 +106,97 @@ const OrderDetailsPage = () => {
       ) : (
         <>
           <Meta title={'Order Details'} />
-          <h1>Order ID: {orderId}</h1>
-          <Row>
-            <Col md={8}>
-              <ListGroup variant='flush'>
-                <ListGroup.Item>
-                  <h2>Shipping </h2>
-                  <div className='mb-3'>
-                    <strong>Name:</strong> {order?.user?.name}
-                  </div>
-                  <div className='mb-3'>
-                    <strong>Email:</strong> {order?.user?.email}
-                  </div>
-                  <div className='mb-3'>
-                    <strong>Address:</strong> {order?.shippingAddress?.address},
-                    {order?.shippingAddress?.city},
-                    {order?.shippingAddress?.postalCode},
-                    {order?.shippingAddress?.country} <br />
-                  </div>
-                  {order?.isDelivered ? (
-                    <Message variant='success'>
-                      Delivered on{' '}
-                      {new Date(order?.deliveredAt).toLocaleString()}
-                    </Message>
-                  ) : (
-                    <Message variant={'danger'}>{'Not Delivered'}</Message>
-                  )}
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <h2>Payment Method </h2>
-                  <div className='mb-3'>
-                    <strong>Method:</strong> {order?.paymentMethod}
-                  </div>
-                  {order?.isPaid ? (
-                    <Message variant={'success'}>
-                      Paid on {new Date(order?.paidAt).toLocaleString()}
-                    </Message>
-                  ) : (
-                    <Message variant={'danger'}>{'Not paid'}</Message>
-                  )}
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <h2>Order Items </h2>
-                  <ListGroup variant='flush'>
-                    {order?.orderItems?.map(item => (
-                      <ListGroup.Item key={item._id}>
-                        <Row>
-                          <Col md={2}>
-                            <Image
-                              src={item.image}
-                              alt={item.name}
-                              fluid
-                              rounded
-                            />
-                          </Col>
-                          <Col md={6}>
-                            <Link
-                              to={`/product/${item._id}`}
-                              className='product-title text-dark'
-                              style={{ textDecoration: 'none' }}
-                            >
-                              {item.name}
-                            </Link>
-                          </Col>
-                          <Col md={4}>
-                            {item.qty} x {addCurrency(item.price)} =
-                            {addCurrency(item.qty * item.price)}
-                          </Col>
-                        </Row>
-                      </ListGroup.Item>
-                    ))}
-                  </ListGroup>
-                </ListGroup.Item>
-              </ListGroup>
-            </Col>
-            <Col md={4}>
-              <Card>
-                <ListGroup variant='flush'>
-                  <ListGroup.Item>
-                    <h2>Order Summary</h2>
-                  </ListGroup.Item>
-                  <ListGroup.Item>
-                    <Row>
-                      <Col>Items:</Col>
-                      <Col>{addCurrency(order?.itemsPrice)}</Col>
-                    </Row>
-                  </ListGroup.Item>
-                  <ListGroup.Item>
-                    <Row>
-                      <Col>Shipping:</Col>
-                      <Col>{addCurrency(order?.shippingPrice)}</Col>
-                    </Row>
-                  </ListGroup.Item>
-                  <ListGroup.Item>
-                    <Row>
-                      <Col>Tax:</Col>
-                      <Col>{addCurrency(order?.taxPrice)}</Col>
-                    </Row>
-                  </ListGroup.Item>
-                  <ListGroup.Item>
-                    <Row>
-                      <Col>Total:</Col>
-                      <Col>{addCurrency(order?.totalPrice)}</Col>
-                    </Row>
-                  </ListGroup.Item>
-                  {!order?.isPaid && !userInfo.isAdmin && (
-                    <ListGroup.Item>
-                      <Button
-                        className='w-100'
-                        variant='warning'
-                        onClick={paymentHandler}
-                        disabled={isPayOrderLoading}
-                        style={{ marginBottom: '10px' }}
+          <h1 className="text-2xl font-bold mb-6">Order ID: {orderId}</h1>
+          <div className="flex flex-col md:flex-row gap-8">
+            <div className="flex-1">
+              <div className="bg-white rounded shadow p-6 mb-6">
+                <h2 className="text-xl font-bold mb-2">Shipping</h2>
+                <div className="mb-2"><strong>Name:</strong> {order?.user?.name}</div>
+                <div className="mb-2"><strong>Email:</strong> {order?.user?.email}</div>
+                <div className="mb-2"><strong>Address:</strong> {order?.shippingAddress?.address}, {order?.shippingAddress?.city}, {order?.shippingAddress?.postalCode}, {order?.shippingAddress?.country}</div>
+                {order?.isDelivered ? (
+                  <Message variant='success'>
+                    Delivered on {new Date(order?.deliveredAt).toLocaleString()}
+                  </Message>
+                ) : (
+                  <Message variant='danger'>Not Delivered</Message>
+                )}
+              </div>
+              <div className="bg-white rounded shadow p-6 mb-6">
+                <h2 className="text-xl font-bold mb-2">Payment Method</h2>
+                <div className="mb-2"><strong>Method:</strong> {order?.paymentMethod}</div>
+                {order?.isPaid ? (
+                  <Message variant='success'>
+                    Paid on {new Date(order?.paidAt).toLocaleString()}
+                  </Message>
+                ) : (
+                  <Message variant='danger'>Not paid</Message>
+                )}
+              </div>
+              <div className="bg-white rounded shadow p-6">
+                <h2 className="text-xl font-bold mb-2">Order Items</h2>
+                <div className="divide-y">
+                  {order?.orderItems?.map(item => (
+                    <div key={item._id} className="flex items-center py-4 gap-4">
+                      <img
+                        src={getImageUrl(item.image)}
+                        alt={item.name}
+                        className="w-16 h-16 object-contain rounded"
+                      />
+                      <Link
+                        to={`/product/${item._id}`}
+                        className="font-semibold text-gray-800 hover:underline flex-1"
                       >
-                        Pay Order
-                      </Button>
-                    </ListGroup.Item>
-                  )}
-                  {userInfo &&
-                    userInfo.isAdmin &&
-                    order?.isPaid &&
-                    !order?.isDelivered && (
-                      <ListGroup.Item>
-                        <Button
-                          onClick={deliveredHandler}
-                          variant='warning'
-                          disabled={isUpdateDeliverLoading}
-                          style={{ marginBottom: '10px' }}
-                        >
-                          Mark As Delivered
-                        </Button>
-                      </ListGroup.Item>
-                    )}
-                </ListGroup>
-              </Card>
-            </Col>
-          </Row>
+                        {item.name}
+                      </Link>
+                      <div>
+                        {item.qty} x {addCurrency(item.price)} = {addCurrency(item.qty * item.price)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="w-full md:w-1/3">
+              <div className="bg-white rounded shadow p-6">
+                <h2 className="text-xl font-bold mb-4">Order Summary</h2>
+                <div className="mb-2 flex justify-between">
+                  <span>Items:</span>
+                  <span>{addCurrency(order?.itemsPrice)}</span>
+                </div>
+                <div className="mb-2 flex justify-between">
+                  <span>Shipping:</span>
+                  <span>{addCurrency(order?.shippingPrice)}</span>
+                </div>
+                <div className="mb-2 flex justify-between">
+                  <span>Tax:</span>
+                  <span>{addCurrency(order?.taxPrice)}</span>
+                </div>
+                <div className="mb-4 flex justify-between font-bold">
+                  <span>Total:</span>
+                  <span>{addCurrency(order?.totalPrice)}</span>
+                </div>
+                {!order?.isPaid && !userInfo.isAdmin && (
+                  <button
+                    className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 rounded mb-2"
+                    onClick={paymentHandler}
+                    disabled={isPayOrderLoading}
+                  >
+                    Pay Order
+                  </button>
+                )}
+                {userInfo && userInfo.isAdmin && order?.isPaid && !order?.isDelivered && (
+                  <button
+                    onClick={deliveredHandler}
+                    className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 rounded mb-2"
+                    disabled={isUpdateDeliverLoading}
+                  >
+                    Mark As Delivered
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
         </>
       )}
     </>

@@ -130,7 +130,720 @@ const products = [
     countInStock: 9,
     rating: 4.6,
     numReviews: 107
+  },
+  {
+    "name": "Tapo C210 360° 3MP Full HD Pan/Tilt Smart Wi-Fi Security Camera",
+    "price": 1599,
+    "image": "/uploads/Tapo_C210_360__3MP_Full_HD_230.jpg",
+    "description": "Keep your home secure with the Tapo C210 featuring full HD video, night vision, and two-way audio. Compatible with Alexa and Google Assistant.",
+    "category": "Electronics",
+    "rating": 4.3,
+    "numReviews": 864,
+    "countInStock": 27,
+    "brand": "TP-Link"
+  },
+  {
+    "name": "CP PLUS 3 MP Full HD Smart Wi-fi CCTV Camera | 360° Pan & Tilt",
+    "price": 1549,
+    "image": "/uploads/CP_PLUS_3_MP_Full_HD_Smart_Wi_.jpg",
+    "description": "Smart CCTV with 360° rotation, motion detection, and two-way audio. Seamlessly works with Alexa and Google Assistant.",
+    "category": "Electronics",
+    "rating": 4.1,
+    "numReviews": 622,
+    "countInStock": 16,
+    "brand": "CP Plus"
+  },
+  {
+    "name": "Qubo Smart Home Security Cam 360° 3MP 2K | Made in India",
+    "price": 1590,
+    "image": "/uploads/Qubo_Smart_Home_Security_Cam_3.jpg",
+    "description": "A smart indoor security cam with 2K resolution, mobile app control, AI motion detection and cloud storage. Made in India.",
+    "category": "Electronics",
+    "rating": 4.0,
+    "numReviews": 414,
+    "countInStock": 23,
+    "brand": "Qubo"
+  },
+  {
+    "name": "Tapo C200 360° 2MP 1080p Full HD Pan/Tilt Wi-Fi Smart Camera",
+    "price": 1499,
+    "image": "/uploads/Tapo_C200_360__2MP_1080p_Full_.jpg",
+    "description": "Affordable security camera offering full HD video, night vision, motion detection, and Alexa support.",
+    "category": "Electronics",
+    "rating": 4.2,
+    "numReviews": 712,
+    "countInStock": 19,
+    "brand": "TP-Link"
+  },
+  {
+    "name": "CP PLUS 2MP Full HD Smart Wi-Fi CCTV Home Security Camera",
+    "price": 1399,
+    "image": "/uploads/CP_PLUS_2MP_Full_HD_Smart_Wi_F.jpg",
+    "description": "Full HD Wi-Fi camera with 360° view, two-way audio, motion alerts, night vision, and SD card support up to 128GB.",
+    "category": "Electronics",
+    "rating": 3.9,
+    "numReviews": 358,
+    "countInStock": 14,
+    "brand": "CP Plus"
+  },
+  {
+    "name": "MI Xiaomi Wireless Home Security Camera 2i 2022 Edition",
+    "price": 2199,
+    "image": "/uploads/MI_Xiaomi_Wireless_Home_Securi.jpg",
+    "description": "AI-powered motion detection, enhanced night vision, and seamless integration with Mi Home App for smart home security.",
+    "category": "Electronics",
+    "rating": 4.4,
+    "numReviews": 1334,
+    "countInStock": 32,
+    "brand": "Xiaomi"
+  },
+  {
+    "name": "Imou 360° 1080P Full HD CCTV Security Camera",
+    "price": 1396,
+    "image": "/uploads/Imou_360__1080P_Full_HD_CCTV_S.jpg",
+    "description": "Versatile security camera with 360° pan, human detection, motion tracking, and Alexa compatibility.",
+    "category": "Electronics",
+    "rating": 4.0,
+    "numReviews": 292,
+    "countInStock": 20,
+    "brand": "Imou"
+  },
+  {
+    "name": "Toy Imagine Digital Camera for Kids – Mini HD Camera Toy",
+    "price": 659,
+    "image": "/uploads/Toy_Imagine_Digital_Camera_for.jpg",
+    "description": "Kid-friendly camera with HD photo and video, built-in rechargeable battery, and a fun 2-inch display.",
+    "category": "Kids",
+    "rating": 4.1,
+    "numReviews": 81,
+    "countInStock": 45,
+    "brand": "Toy Imagine"
+  },
+  {
+    "name": "Sony Alpha ZV-E10L 24.2 MP Mirrorless Vlog Camera",
+    "price": 59999,
+    "image": "/uploads/Sony_Alpha_ZV_E10L_24_2_Mega_P.jpg",
+    "description": "Vlogging camera with 4K recording, interchangeable lenses, advanced autofocus, and clear audio.",
+    "category": "Cameras",
+    "rating": 4.7,
+    "numReviews": 180,
+    "countInStock": 9,
+    "brand": "Sony"
+  },
+  {
+    "name": "CP PLUS 3MP Smart Wi-fi CCTV Camera | 360° & Full HD",
+    "price": 1599,
+    "image": "/uploads/CP_PLUS_3MP_Smart_Wi_fi_CCTV_C.jpg",
+    "description": "Smart CCTV camera with advanced motion tracking, full-color night vision, and 256GB SD card support.",
+    "category": "Electronics",
+    "rating": 4.3,
+    "numReviews": 398,
+    "countInStock": 22,
+    "brand": "CP Plus"
+  },
+  {
+    "name": "VJIANGER 4K Digital Camera For Photography, 64MP Vlogging Camera",
+    "price": 6999,
+    "image": "/uploads/VJIANGER_4K_Digital_Camera_For.jpg",
+    "description": "4K vlogging and photography camera with 64MP resolution, 180° flip screen, and 18X digital zoom.",
+    "category": "Cameras",
+    "rating": 4.2,
+    "numReviews": 76,
+    "countInStock": 11,
+    "brand": "VJIANGER"
+  },
+  {
+    "name": "CP PLUS 3 MP Smart Wi-fi Bulb Security Camera | 360°",
+    "price": 1399,
+    "image": "/uploads/CP_PLUS_3_MP_Resolution_Smart_.jpg",
+    "description": "Innovative bulb-shaped Wi-Fi security camera with 360° view, motion alerts, and built-in siren.",
+    "category": "Electronics",
+    "rating": 3.9,
+    "numReviews": 154,
+    "countInStock": 18,
+    "brand": "CP Plus"
+  },
+  {
+    "name": "EZVIZ 3K H9C Dual-Lens 4K(5MP+5MP) Pan & Tilt Wi-Fi Camera",
+    "price": 6759,
+    "image": "/uploads/EZVIZ_by_Hikvision_3K_H9C_Dual.jpg",
+    "description": "Dual-lens 5MP+5MP 4K security cam with AI detection, siren, strobe light, and all-weather design.",
+    "category": "Electronics",
+    "rating": 4.5,
+    "numReviews": 222,
+    "countInStock": 7,
+    "brand": "EZVIZ"
+  },
+  {
+    "name": "Focusify 4K Ultra HD Digital Point & Shoot Camera",
+    "price": 3999,
+    "image": "/uploads/Focusify_Digital_Camera__4K_Ul.jpg",
+    "description": "Point and shoot digital camera with 56MP autofocus, 20X zoom, anti-shake, and included 32GB SD card.",
+    "category": "Cameras",
+    "rating": 4.0,
+    "numReviews": 113,
+    "countInStock": 14,
+    "brand": "Focusify"
+  },
+  {
+    "name": "TECHNOVIEW Full HD Wi-Fi Wireless Security Camera 1080p",
+    "price": 849,
+    "image": "/uploads/TECHNOVIEW_Full_HD_Wi_Fi_Wirel.jpg",
+    "description": "Compact indoor IP camera with motion detection, two-way audio, and night vision capabilities.",
+    "category": "Electronics",
+    "rating": 3.8,
+    "numReviews": 193,
+    "countInStock": 29,
+    "brand": "Technoview"
+  },
+  {
+    "name": "Fujifilm Instax Mini 11 Instant Camera (Sky Blue)",
+    "price": 6499,
+    "image": "/uploads/Fujifilm_Instax_Mini_11_Instan.jpg",
+    "description": "Instant camera for instant photo printing with automatic exposure and selfie mode.",
+    "category": "Cameras",
+    "rating": 4.6,
+    "numReviews": 421,
+    "countInStock": 15,
+    "brand": "Fujifilm"
+  },
+  {
+    "name": "Rusabl Stainless Steel Straws (Pack of 4, Silver) for Kids & Adult with Cleaning Brush, Reusable Metal Straws in Jute Pouch",
+    "price": 219,
+    "image": "/uploads/Rusabl_Stainless_Steel_Straws_.jpg",
+    "description": "Premium stainless steel straws set with cleaning brush, perfect for daily use. Eco-friendly alternative to plastic straws.",
+    "category": "Reusable Straws",
+    "rating": 4.5,
+    "numReviews": 128,
+    "countInStock": 200,
+    "brand": "Rusabl"
+  },
+  {
+    "name": "Dr. Bio Biodegradable Compostable Straw Eco Friendly, Thick Quality, Made of Corn Starch (2.25 cm x 19 cm) - 100 Nos. (8 mm)",
+    "price": 130,
+    "image": "/uploads/Dr__Bio_Biodegradable_Composta.jpg",
+    "description": "100% compostable straws made from corn starch, perfect for eco-conscious consumers and businesses.",
+    "category": "Disposable Straws",
+    "rating": 4.2,
+    "numReviews": 95,
+    "countInStock": 350,
+    "brand": "Dr. Bio"
+  },
+  {
+    "name": "Earthism Reusable Stainless Steel Metal Eco-friendly Straws - Pack of 4 straws (2 Straight, 2 Bent) with Cleaning Brush and Cotton Pouch",
+    "price": 249,
+    "image": "/uploads/Earthism_Reusable_Stainless_St.jpg",
+    "description": "High-quality stainless steel straw set with convenient carrying pouch and cleaning brush.",
+    "category": "Reusable Straws",
+    "rating": 4.7,
+    "numReviews": 210,
+    "countInStock": 150,
+    "brand": "Earthism"
+  },
+  {
+    "name": "Pureco Paper Straws [6 MM, 250 Count, 300 GSM] | Biodegradable Paper Straw | Disposable Eco-Friendly Compostable Paper Straws | Cold Drink Juice Smoothie Non-Bendable Straw (Solid Black)",
+    "price": 225,
+    "image": "/uploads/Pureco_Paper_Straws__6_MM__250.jpg",
+    "description": "Premium thick paper straws that are completely biodegradable and compostable, perfect for parties and events.",
+    "category": "Disposable Straws",
+    "rating": 4.3,
+    "numReviews": 87,
+    "countInStock": 180,
+    "brand": "Pureco"
+  },
+  {
+    "name": "ECO SOUL [8 mm, 100 Count] Biodegradable Paper Straws | Eco-Friendly Compostable Sustainable Disposable Drinking Straws | Juice Smoothie Thick Shakes Non-Bendable White Straws (Wide)",
+    "price": 199,
+    "image": "/uploads/ECO_SOUL__8_mm__100_Count__Bio.jpg",
+    "description": "Wide diameter paper straws suitable for thick shakes and smoothies, 100% biodegradable and compostable.",
+    "category": "Disposable Straws",
+    "rating": 4.4,
+    "numReviews": 112,
+    "countInStock": 250,
+    "brand": "ECO SOUL"
+  },
+  {
+    "name": "ECO SOUL [8 MM, 100 Count] Biodegradable Multicolor Paper Straws | Disposable Drinking Rainbow Eco-Friendly Compostable Paper Straws | Cocktail Cold Drink Juice Smoothie Non-Bendable Straws (Wide)",
+    "price": 199,
+    "image": "/uploads/ECO_SOUL__8_MM__100_Count__Bio.jpg",
+    "description": "Colorful rainbow paper straws that make drinks more fun while being environmentally friendly.",
+    "category": "Disposable Straws",
+    "rating": 4.6,
+    "numReviews": 134,
+    "countInStock": 220,
+    "brand": "ECO SOUL"
+  },
+  {
+    "name": "ECO SOUL [6 mm, 100 Count] Biodegradable Paper Straws | Eco-Friendly Compostable Sustainable Disposable Drinking Straws | Cocktail Cold Drink Juice Non-Bendable White Straws (Regular)",
+    "price": 189,
+    "image": "/uploads/ECO_SOUL__6_mm__100_Count__Bio.jpg",
+    "description": "Standard size paper straws perfect for cocktails and cold drinks, completely biodegradable.",
+    "category": "Disposable Straws",
+    "rating": 4.3,
+    "numReviews": 98,
+    "countInStock": 300,
+    "brand": "ECO SOUL"
+  },
+  {
+    "name": "CasaLuxe Premium Stainless Steel Straw Spoon with Filter, Cleaning Brush, Multipurpose Straw,Yerba Mate Straw,Tea Filter,Infuser, Barware,Loose Leaf Tea Straw,Resuable & Eco Friendly (2)",
+    "price": 299,
+    "image": "/uploads/CasaLuxe_Premium_Stainless_Ste.jpg",
+    "description": "Innovative straw spoon combo with built-in filter, perfect for tea lovers and mixologists.",
+    "category": "Reusable Straws",
+    "rating": 4.8,
+    "numReviews": 76,
+    "countInStock": 100,
+    "brand": "CasaLuxe"
+  },
+  {
+    "name": "ECO SOUL [10 mm, 100 Count] Biodegradable Paper Straws | Eco-Friendly Compostable Sustainable Disposable Drinking Straws | Bubble Tea Juice Smoothie Thick Shakes Non-Bendable White Straws (Extra Wide)",
+    "price": 199,
+    "image": "/uploads/ECO_SOUL__10_mm__100_Count__Bi.jpg",
+    "description": "Extra wide straws specially designed for bubble tea and thick shakes, environmentally safe.",
+    "category": "Disposable Straws",
+    "rating": 4.5,
+    "numReviews": 89,
+    "countInStock": 175,
+    "brand": "ECO SOUL"
+  },
+  {
+    "name": "Imaashi Pack of 100 Eco-Friendly Paper Straws Pipes- 100% Biodegradable and Compostable Alternative to Plastic Straws Perfect for Parties, Events, and Daily use - Random Colors- Size 6 MM 8 Inch",
+    "price": 99,
+    "image": "/uploads/Imaashi_Pack_of_100_Eco_Friend.jpg",
+    "description": "Affordable colorful paper straws great for parties and everyday use, completely plastic-free.",
+    "category": "Disposable Straws",
+    "rating": 4.1,
+    "numReviews": 143,
+    "countInStock": 400,
+    "brand": "Imaashi"
+  },
+  {
+    "name": "ECO SOUL [12 mm, 100 Count] Biodegradable Paper Straws | Eco-Friendly Compostable Sustainable Disposable Drinking Straws | Cocktail Cold Drink Juice Non-Bendable White Straws (Extra Wide)",
+    "price": 239,
+    "image": "/uploads/ECO_SOUL__12_mm__100_Count__Bi.jpg",
+    "description": "Extra wide diameter straws for specialty drinks, made from biodegradable materials.",
+    "category": "Disposable Straws",
+    "rating": 4.4,
+    "numReviews": 67,
+    "countInStock": 120,
+    "brand": "ECO SOUL"
+  },
+  {
+    "name": "Wringo Reusable Color Glass Straw Set 6, Ecofriendly Multiuse Drinking Straws, Cute Straws for Cocktails, Mocktails, Shakes & More Drinks (06)",
+    "price": 189,
+    "image": "/uploads/Wringo_Reusable_Color_Glass_St.jpg",
+    "description": "Beautiful colored glass straws that add elegance to any drink while being reusable.",
+    "category": "Reusable Straws",
+    "rating": 4.6,
+    "numReviews": 92,
+    "countInStock": 180,
+    "brand": "Wringo"
+  },
+  {
+    "name": "Greenland Ecostrwz Paper Rainbow Drinking Straws - Biodegradable 6MM - Eco-Friendly Colorful - Decorations Parties by Paper Straw for Shakes, Sodas, Cold Drinks, Juices, Mocktail & Cocktail (100)",
+    "price": 110,
+    "image": "/uploads/Greenland_Ecostrwz_Paper_Rainb.jpg",
+    "description": "Vibrant rainbow straws perfect for party decorations and festive drinks.",
+    "category": "Disposable Straws",
+    "rating": 4.2,
+    "numReviews": 78,
+    "countInStock": 275,
+    "brand": "Greenland"
+  },
+  {
+    "name": "Perlepure Natural Straw/Coconut Leaf Biodegradable, Eco-Friendly & Sustainable Drinking Straws (Pack of 30) / Ethically Sourced & Long Lasting (Juice Straws : 12cmx4mm)",
+    "price": 180,
+    "image": "/uploads/Perlepure_Natural_Straw_Coconu.jpg",
+    "description": "Unique natural straws made from coconut leaves, completely biodegradable and sustainable.",
+    "category": "Natural Straws",
+    "rating": 4.7,
+    "numReviews": 56,
+    "countInStock": 90,
+    "brand": "Perlepure"
+  },
+  {
+    "name": "Dr. Bio Biodegradable Compostable Straw 200Pieces Eco Friendly, Thick Quality, Made of Corn Starch | 0.8 cm x 21 cm | 8 mm (Pack of 2)",
+    "price": 290,
+    "image": "/uploads/Dr__Bio_Biodegradable_Composta.jpg",
+    "description": "High-quality corn starch straws in bulk quantity, perfect for businesses and events.",
+    "category": "Disposable Straws",
+    "rating": 4.3,
+    "numReviews": 64,
+    "countInStock": 150,
+    "brand": "Dr. Bio"
+  },
+  {
+    "name": "Goli Soda Reusable Stainless Steel Bent Straws | Reusable | Washable | Eco Friendly | Durable | Rustproof | Unbreakable | Stainless Steel - (Pack of 4) - 50 g",
+    "price": 181,
+    "image": "/uploads/Goli_Soda_Reusable_Stainless_S.jpg",
+    "description": "Bent stainless steel straws perfect for tumblers and cups, durable and long-lasting.",
+    "category": "Reusable Straws",
+    "rating": 4.5,
+    "numReviews": 118,
+    "countInStock": 200,
+    "brand": "Goli Soda"
+  },
+  {
+    "name": "MosQuick® Set of 5 SS 304 Stainless Steel Straw Food Grade Eco-Friendly metal straws for drinking steel straw with brush Perfect straw for kids reusable juice straw steel straw set (4straw ,1 brush)",
+    "price": 219,
+    "image": "/uploads/MosQuick__Set_of_5_SS_304_Stai.jpg",
+    "description": "Food-grade stainless steel straw set with cleaning brush, safe for kids and adults.",
+    "category": "Reusable Straws",
+    "rating": 4.4,
+    "numReviews": 103,
+    "countInStock": 175,
+    "brand": "MosQuick"
+  },
+  {
+    "name": "ECO SOUL [6 MM, 100 Count] Biodegradable Multicolor Paper Straws | Disposable Drinking Rainbow Eco-Friendly Compostable Paper Straws | Cocktail Cold Drink Juice Smoothie Non-Bendable Straws (Regular)",
+    "price": 189,
+    "image": "/uploads/ECO_SOUL__6_MM__100_Count__Bio.jpg",
+    "description": "Colorful regular size paper straws for cocktails and cold drinks, eco-friendly alternative.",
+    "category": "Disposable Straws",
+    "rating": 4.3,
+    "numReviews": 87,
+    "countInStock": 240,
+    "brand": "ECO SOUL"
+  },
+  {
+    "name": "SANWALSA [6 mm, Pack of 100, Multicolor] Biodegradable Disposable Multicolor Paper Straws | Eco-Friendly Rainbow Drinking Paper Straws | Cold Drinks Juice Cocktails Soda (Non-Bendable)",
+    "price": 164,
+    "image": "/uploads/SANWALSA__6_mm__Pack_of_100__M.jpg",
+    "description": "Vibrant multicolor straws that make any drink more festive, completely biodegradable.",
+    "category": "Disposable Straws",
+    "rating": 4.2,
+    "numReviews": 59,
+    "countInStock": 190,
+    "brand": "SANWALSA"
+  },
+  {
+    "name": "Bloomingdale Reusable Stainless Steel Straw with Cleaning Brush- Long Metal Straws for Drinking, Reusable Set of 5 (2- Bend Pipe, 2- Long Straw, 1-Cleaning Brush), Silver (BSteelStrawsSilver5Pcs)",
+    "price": 99,
+    "image": "/uploads/Bloomingdale_Reusable_Stainles.jpg",
+    "description": "Complete stainless steel straw set with multiple straw types and cleaning brush.",
+    "category": "Reusable Straws",
+    "rating": 4.1,
+    "numReviews": 132,
+    "countInStock": 250,
+    "brand": "Bloomingdale"
+  },
+  {
+    "name": "Amit Marketing 10 mm Corn Starch Straws | Eco-Friendly Compostable Sustainable Disposable Drinking Straws | Cocktail Cold Drink Bubble Tea Juice Smoothie Thick Shakes Non-Bendable White (500 Pcs)",
+    "price": 499,
+    "image": "/uploads/Amit_Marketing_10_mm_Corn_Star.jpg",
+    "description": "Bulk pack of corn starch straws, perfect for commercial use and large events.",
+    "category": "Disposable Straws",
+    "rating": 4.5,
+    "numReviews": 47,
+    "countInStock": 80,
+    "brand": "Amit Marketing"
+  },
+  {
+    "name": "6pcs Stainless Steel Straw & Spoon Set with Cleaning Brush - Reusable Eco-Friendly Straws for Drinks, Milk Tea, Smoothies & Cocktails - Polished Stirring Spoons, Perfect for Home, Hotel (Round Model)",
+    "price": 249,
+    "image": "/uploads/6pcs_Stainless_Steel_Straw___S.jpg",
+    "description": "Versatile straw and spoon set perfect for smoothies and milk teas, reusable and durable.",
+    "category": "Reusable Straws",
+    "rating": 4.7,
+    "numReviews": 88,
+    "countInStock": 120,
+    "brand": "Generic"
+  },
+  {
+    "name": "The Bamboo Bae Steel Straws | Reusable Straws 2 Bent + 2 Straight + 1 Cleaner | Eco Friendly Straws | Reusable Straws with Cleaner | SS 304 SUS",
+    "price": 198,
+    "image": "/uploads/The_Bamboo_Bae_Steel_Straws___.jpg",
+    "description": "Complete stainless steel straw kit with both straight and bent options for all needs.",
+    "category": "Reusable Straws",
+    "rating": 4.4,
+    "numReviews": 76,
+    "countInStock": 160,
+    "brand": "The Bamboo Bae"
+  },
+  {
+    "name": "ANAB GI Portable Reusable Drinking Straws with Case| Collapsible and Foldable Telescopic Stainless Steel Straw Dispenser, Long Cleaning Brush, Easy to Clean",
+    "price": 284,
+    "image": "/uploads/ANAB_GI_Portable_Reusable_Drin.jpg",
+    "description": "Innovative collapsible straw with carrying case, perfect for travel and on-the-go use.",
+    "category": "Reusable Straws",
+    "rating": 4.6,
+    "numReviews": 63,
+    "countInStock": 110,
+    "brand": "ANAB GI"
+  },
+  {
+    "name": "Bellemax Reusable Glass Straw Set 6,Ecofriendly Multiuse Drinking Straws, Cute Straws for Cocktails, Mocktails, Shakes & More Drinks (Transparent -06)",
+    "price": 189,
+    "image": "/uploads/Bellemax_Reusable_Glass_Straw_.jpg",
+    "description": "Elegant transparent glass straws that add sophistication to any beverage.",
+    "category": "Reusable Straws",
+    "rating": 4.5,
+    "numReviews": 71,
+    "countInStock": 140,
+    "brand": "Bellemax"
+  },
+  {
+    "name": "Irida Naturals Unbreakable 8\" Wheat Straw & Bamboo Fiber Snack Plates, Pack of 4, Eco-Friendly, Lightweight & Reusable, Microwave Safe Breakfast Plates for Hot & Cold Serving (Multicolor)",
+    "price": 464,
+    "image": "/uploads/Irida_Naturals_Unbreakable_8__.jpg",
+    "description": "Sustainable plates made from wheat straw and bamboo fiber, durable and microwave safe.",
+    "category": "Eco-Friendly Tableware",
+    "rating": 4.3,
+    "numReviews": 52,
+    "countInStock": 90,
+    "brand": "Irida Naturals"
+  },
+  {
+    "name": "Wanna Party Decorative Paper Straws for Parties,Elegant White and Gold Eco friendly and Disposable Straws for any kind of occassion-24 count",
+    "price": 149,
+    "image": "/uploads/Wanna_Party_Decorative_Paper_S.jpg",
+    "description": "Elegant white and gold straws perfect for weddings and special occasions.",
+    "category": "Disposable Straws",
+    "rating": 4.7,
+    "numReviews": 94,
+    "countInStock": 180,
+    "brand": "Wanna Party"
+  },
+  {
+    "name": "TUGS Premium Bamboo Straws Length 8 inch Pack of 10, 25, 50, 100 Natural Eco Friendly Biodegradable Drinking Straws with Straw Cleaning Brush -Reusable. (7-10) mm (50)",
+    "price": 698,
+    "image": "/uploads/TUGS_Premium_Bamboo_Straws_Len.jpg",
+    "description": "Natural bamboo straws with cleaning brush, sustainable and reusable alternative.",
+    "category": "Natural Straws",
+    "rating": 4.8,
+    "numReviews": 68,
+    "countInStock": 75,
+    "brand": "TUGS"
+  },
+  {
+    "name": "Irida Naturals Wheat Straw Cups Set of 4-300 ML Unbreakable for Serving Tea, Water, Juice & Soda, Reusable, Lightweight & Eco-Friendly, Safe for Microwave, Freezer & Dishwasher (Soft Beige)",
+    "price": 399,
+    "image": "/uploads/Irida_Naturals_Wheat_Straw_Cup.jpg",
+    "description": "Sustainable cups made from wheat straw, perfect for hot and cold beverages.",
+    "category": "Eco-Friendly Tableware",
+    "rating": 4.4,
+    "numReviews": 57,
+    "countInStock": 85,
+    "brand": "Irida Naturals"
+  },
+  {
+    "name": "GL Creation Premium Biodegradable Rainbow Paper Straws Eco-Friendly Assorted Colorful - Party Decoration Supplies Mad in India. (8 MM, 100)",
+    "price": 149,
+    "image": "/uploads/GL_Creation_Premium_Biodegrada.jpg",
+    "description": "Colorful rainbow straws perfect for party decorations and festive drinks.",
+    "category": "Disposable Straws",
+    "rating": 4.2,
+    "numReviews": 49,
+    "countInStock": 200,
+    "brand": "GL Creation"
+  },
+  {
+    "name": "Sarveda Stainless Steel Straws | Re-usable & Eco-Friendly Suitable for Kids & Adults (Pack of 2)",
+    "price": 189,
+    "image": "/uploads/Sarveda_Stainless_Steel_Straws.jpg",
+    "description": "Simple and effective stainless steel straws, perfect for everyday use.",
+    "category": "Reusable Straws",
+    "rating": 4.3,
+    "numReviews": 82,
+    "countInStock": 150,
+    "brand": "Sarveda"
+  },
+  {
+    "name": "FORKLS Stainless Steel Reusable Straws with Cleaning Brush – Set of 4 | 8.5 Inch Eco-Friendly Metal Drinking Straws for Tumblers, Smoothies, Juices & Cold Beverages | Dishwasher Safe",
+    "price": 299,
+    "image": "/uploads/FORKLS_Stainless_Steel_Reusabl.jpg",
+    "description": "Premium stainless steel straw set with cleaning brush, dishwasher safe for easy cleaning.",
+    "category": "Reusable Straws",
+    "rating": 4.6,
+    "numReviews": 107,
+    "countInStock": 130,
+    "brand": "FORKLS"
+  },
+  {
+    "name": "Her Home Paper Straws - 100 Biodegradable 6MM - Durable & Eco-Friendly Colorful - Rainbow Drinking Straws & Party Decoration Supplies - Made in India",
+    "price": 139,
+    "image": "/uploads/Her_Home_Paper_Straws___100_Bi.jpg",
+    "description": "Vibrant rainbow paper straws that are completely biodegradable and compostable.",
+    "category": "Disposable Straws",
+    "rating": 4.1,
+    "numReviews": 73,
+    "countInStock": 220,
+    "brand": "Her Home"
+  },
+  {
+    "name": "Ezee Paper Straw 8 MM 50PCS",
+    "price": 69,
+    "image": "/uploads/Ezee_Paper_Straw_8_MM_50PCS.jpg",
+    "description": "Basic paper straws at an affordable price, perfect for small gatherings.",
+    "category": "Disposable Straws",
+    "rating": 3.9,
+    "numReviews": 61,
+    "countInStock": 300,
+    "brand": "Ezee"
+  },
+  {
+    "name": "Cause Straws - Biodegradable Premium Drinking Straws | 100 Straws (6mm Wide) | White Colour | Best for Juice, Soft Drinks and Cocktails | Sip for a Cause (6MM, White)",
+    "price": 110,
+    "image": "/uploads/Cause_Straws___Biodegradable_P.jpg",
+    "description": "Simple white paper straws where portion of proceeds goes to environmental causes.",
+    "category": "Disposable Straws",
+    "rating": 4.3,
+    "numReviews": 84,
+    "countInStock": 190,
+    "brand": "Cause Straws"
+  },
+  {
+    "name": "Mivana Reusable Glass Straw Set 12 | Ecofriendly Multiuse Drinking Straws | Cute Straws for Mocktails, Cocktails, Shakes & More Drinks",
+    "price": 331,
+    "image": "/uploads/Mivana_Reusable_Glass_Straw_Se.jpg",
+    "description": "Large set of glass straws perfect for restaurants and bars, elegant and reusable.",
+    "category": "Reusable Straws",
+    "rating": 4.7,
+    "numReviews": 59,
+    "countInStock": 70,
+    "brand": "Mivana"
+  },
+  {
+    "name": "Royalkart® 6-Piece Reusable Stainless Steel Straw Spoon Combo (8.6\" Gold) with Cleaning Brush | Metal Straws for Milkshakes, Smoothies, Iced Tea, Cocktails | Eco-Friendly Party & Home Use",
+    "price": 289,
+    "image": "/uploads/Royalkart__6_Piece_Reusable_St.jpg",
+    "description": "Luxurious gold-finished straw and spoon set, perfect for entertaining guests.",
+    "category": "Reusable Straws",
+    "rating": 4.5,
+    "numReviews": 77,
+    "countInStock": 100,
+    "brand": "Royalkart"
+  },
+  {
+    "name": "Happy Cove Eco-Friendly Dinner Plates Set | Rice Husk, Bamboo Fibre & Wheat Straw | Elegant 10 inches Plates Set - Sustainable Dinner Set for Gift | Set of 4 | Microwave Safe",
+    "price": 424,
+    "image": "/uploads/Happy_Cove_Eco_Friendly_Dinner.jpg",
+    "description": "Sustainable dinner plates made from natural materials, elegant and microwave safe.",
+    "category": "Eco-Friendly Tableware",
+    "rating": 4.6,
+    "numReviews": 63,
+    "countInStock": 80,
+    "brand": "Happy Cove"
+  },
+  {
+    "name": "KitchEase 8\" Wheat Straw Round Dinner Plate | Eco-Friendly, Lightweight & Unbreakable | Microwave & Dishwasher Safe Food Dish | Steak Plate, Serving Tray for Kitchen, Restaurant, Parties & Gifting",
+    "price": 299,
+    "image": "/uploads/KitchEase_8__Wheat_Straw_Round.jpg",
+    "description": "Durable wheat straw dinner plate that's both eco-friendly and practical for daily use.",
+    "category": "Eco-Friendly Tableware",
+    "rating": 4.4,
+    "numReviews": 71,
+    "countInStock": 110,
+    "brand": "KitchEase"
+  },
+  {
+    "name": "Wigswin Collapsible Reusable Stainless Steel Straw, Telescopic Metal Drinking Straw with Cleaning Brush and Portable Case, Eco-Friendly Travel Straw for Cups, Bottles, and Tumblers",
+    "price": 559,
+    "image": "/uploads/Wigswin_Collapsible_Reusable_S.jpg",
+    "description": "Innovative collapsible straw with carrying case, perfect for travel enthusiasts.",
+    "category": "Reusable Straws",
+    "rating": 4.8,
+    "numReviews": 92,
+    "countInStock": 65,
+    "brand": "Wigswin"
+  },
+  {
+    "name": "SAVE Reusable Glass Straw Set | 4 Straws & 1 Cleaning Brush | Ecofriendly Multiuse Drinking Straws | Cute Straws for Cocktails, Mocktails, Shakes & More Drinks (Combo, Crystal White)",
+    "price": 162,
+    "image": "/uploads/SAVE_Reusable_Glass_Straw_Set_.jpg",
+    "description": "Affordable glass straw set with cleaning brush, perfect for home use.",
+    "category": "Reusable Straws",
+    "rating": 4.2,
+    "numReviews": 88,
+    "countInStock": 140,
+    "brand": "SAVE"
+  },
+  {
+    "name": "Motka Wheat Straw 9.05\" Bowl Set (Nordic Yellow, 2 Pcs) | Unbreakable & Eco-Friendly Bamboo Fiber Bowls | Microwave Safe Snack Bowls for Kids & Adults | 900 ml, Perfect for Cereal, Salads, Soup",
+    "price": 499,
+    "image": "/uploads/Motka_Wheat_Straw_9_05__Bowl_S.jpg",
+    "description": "Stylish wheat straw bowls in Nordic design, perfect for soups and salads.",
+    "category": "Eco-Friendly Tableware",
+    "rating": 4.5,
+    "numReviews": 46,
+    "countInStock": 75,
+    "brand": "Motka"
+  },
+  {
+    "name": "Amit Marketing Paper Straws I Biodegradable, Disposable, & Eco-Friendly I Pipe for Juices, Shakes, Smoothies, Party Supplies Decorations I 7.75Inch Long, Random Color I 10 mm - 150 Pcs",
+    "price": 349,
+    "image": "/uploads/Amit_Marketing_Paper_Straws_I_.jpg",
+    "description": "Bulk pack of colorful paper straws, great for events and commercial use.",
+    "category": "Disposable Straws",
+    "rating": 4.3,
+    "numReviews": 39,
+    "countInStock": 100,
+    "brand": "Amit Marketing"
+  },
+  {
+    "name": "Motka Wheat Straw Dinner Plate Lightweight Unbreakable | Eco-Friendly Square Dinner Plate with 3 Compartments | Durable, Reusable & BPA-Free | Perfect for Home, Parties, and Restaurants-(2Pcs)",
+    "price": 349,
+    "image": "/uploads/Motka_Wheat_Straw_Dinner_Plate.jpg",
+    "description": "Practical compartment plates made from wheat straw, ideal for meals with sides.",
+    "category": "Eco-Friendly Tableware",
+    "rating": 4.6,
+    "numReviews": 53,
+    "countInStock": 85,
+    "brand": "Motka"
+  },
+  {
+    "name": "Amit Marketing 8 mm Corn Starch Straws | Eco-Friendly Compostable Sustainable Disposable Drinking Straws | Cocktail Cold Drink Bubble Tea Juice Smoothie Thick Shakes Non-Bendable White (500 Pcs)",
+    "price": 449,
+    "image": "/uploads/Amit_Marketing_8_mm_Corn_Starc.jpg",
+    "description": "Commercial quantity corn starch straws, perfect for cafes and restaurants.",
+    "category": "Disposable Straws",
+    "rating": 4.4,
+    "numReviews": 42,
+    "countInStock": 90,
+    "brand": "Amit Marketing"
+  },
+  {
+    "name": "Amit Marketing Paper Straws I Biodegradable, Disposable, & Eco-Friendly I Pipe for Juices, Shakes, Smoothies, Party Supplies Decorations I 7.75Inch Long, Random Color - 12 mm (200)",
+    "price": 398,
+    "image": "/uploads/Amit_Marketing_Paper_Straws_I_.jpg",
+    "description": "Extra wide paper straws in bulk quantity, great for thick shakes and bubble tea.",
+    "category": "Disposable Straws",
+    "rating": 4.5,
+    "numReviews": 37,
+    "countInStock": 80,
+    "brand": "Amit Marketing"
+  },
+  {
+    "name": "KitchAntique 8\" Wheat Straw Round Dinner Plate | Eco-Friendly, Lightweight & Unbreakable | Microwave & Dishwasher Safe Food Dish | Steak Plate, Serving Tray for Kitchen, Restaurant, Parties & Gifting",
+    "price": 249,
+    "image": "/uploads/KitchAntique_8__Wheat_Straw_Ro.jpg",
+    "description": "Classic wheat straw dinner plate with rustic appeal, durable and sustainable.",
+    "category": "Eco-Friendly Tableware",
+    "rating": 4.3,
+    "numReviews": 64,
+    "countInStock": 95,
+    "brand": "KitchAntique"
+  },
+  {
+    "name": "Acorn Crafts Reusable Stainless Steel Straw Set for Kids & Adults 2 Straight, 2 Bent Metal Straws with Cleaning Brush Eco-Friendly, Durable, and Travel-Ready",
+    "price": 159,
+    "image": "/uploads/Acorn_Crafts_Reusable_Stainles.jpg",
+    "description": "Affordable stainless steel straw set with both straight and bent options.",
+    "category": "Reusable Straws",
+    "rating": 4.2,
+    "numReviews": 97,
+    "countInStock": 180,
+    "brand": "Acorn Crafts"
   }
-];
+]
+
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+shuffleArray(products);
 
 export default products;

@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  search: ''
+  search: '' // Ensure search is empty by default
 };
 
 export const searchProductSlice = createSlice({

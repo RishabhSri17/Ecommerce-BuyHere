@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Form, Button, InputGroup } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useResetPasswordMutation } from '../slices/usersApiSlice';
@@ -44,54 +43,53 @@ const ResetPasswordPage = () => {
   return (
     <FormContainer>
       <Meta title={'Reset Password'} />
-      <h1>Reset Password</h1>
+      <h1 className="text-2xl font-bold mb-6">Reset Password</h1>
       {message && <Message>{message}</Message>}
-      <Form onSubmit={submitHandler}>
-        <Form.Group className='mb-3' controlId='password'>
-          <Form.Label>Password</Form.Label>
-          <InputGroup>
-            <Form.Control
+      <form onSubmit={submitHandler} className="space-y-4">
+        <div>
+          <label htmlFor="password" className="block font-medium mb-1">New Password</label>
+          <div className="relative">
+            <input
               type={showPassword ? 'text' : 'password'}
+              id="password"
+              className="w-full border rounded px-3 py-2 pr-10"
               value={password}
-              placeholder='Enter password'
+              placeholder="Enter new password"
               onChange={e => setPassword(e.target.value)}
+              required
             />
-            <InputGroup.Text
+            <span
+              className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
               onClick={togglePasswordVisibility}
-              id='togglePasswordVisibility'
-              style={{ cursor: 'pointer' }}
             >
-              {showPassword ? <FaEye /> : <FaEyeSlash />}
-            </InputGroup.Text>
-          </InputGroup>
-        </Form.Group>
-        <Form.Group className='mb-3' controlId='confirmPassword'>
-          <Form.Label>Confirm Password</Form.Label>
-          <InputGroup>
-            <Form.Control
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
+          </div>
+        </div>
+        <div>
+          <label htmlFor="confirmPassword" className="block font-medium mb-1">Confirm Password</label>
+          <div className="relative">
+            <input
               type={showConfirmPassword ? 'text' : 'password'}
+              id="confirmPassword"
+              className="w-full border rounded px-3 py-2 pr-10"
               value={confirmPassword}
-              placeholder='Confirm password'
+              placeholder="Confirm new password"
               onChange={e => setConfirmPassword(e.target.value)}
+              required
             />
-            <InputGroup.Text
+            <span
+              className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
               onClick={toggleConfirmPasswordVisibility}
-              id='toggleConfirmPasswordVisibility'
-              style={{ cursor: 'pointer' }}
             >
-              {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
-            </InputGroup.Text>
-          </InputGroup>
-        </Form.Group>
-        <Button
-          className='mb-3 w-100'
-          variant='warning'
-          type='submit'
-          disabled={isLoading}
-        >
-          Submit
-        </Button>
-      </Form>
+              {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
+          </div>
+        </div>
+        <button type="submit" className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 rounded" disabled={isLoading}>
+          {isLoading ? 'Resetting...' : 'Reset Password'}
+        </button>
+      </form>
     </FormContainer>
   );
 };

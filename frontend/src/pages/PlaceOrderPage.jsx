@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Row, Col, Button, ListGroup, Card, Image } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { useCreateOrderMutation } from '../slices/ordersApiSlice';
 import { clearCartItems } from '../slices/cartSlice';
@@ -10,6 +9,15 @@ import CheckoutSteps from '../components/CheckoutSteps';
 import { FaIndianRupeeSign } from 'react-icons/fa6';
 import Meta from '../components/Meta';
 import { addCurrency } from '../utils/addCurrency';
+
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
+const getImageUrl = (image) => {
+  if (!image) return '';
+  if (image.startsWith('/uploads/')) {
+    return `${backendUrl}${image}`;
+  }
+  return image;
+};
 
 const PlaceOrderPage = () => {
   const {
@@ -56,92 +64,67 @@ const PlaceOrderPage = () => {
     <>
       <CheckoutSteps step1 step2 step3 step4 />
       <Meta title={'Place Order'} />
-      <Row>
-        <Col md={8}>
-          <ListGroup variant='flush'>
-            <ListGroup.Item>
-              <h2>Shipping </h2>
-              <strong>Address:</strong> {shippingAddress.address},{' '}
-              {shippingAddress.city}, {shippingAddress.postalCode},{' '}
-              {shippingAddress.country}
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <h2>Payment Method </h2>
-              <strong>Method:</strong> {paymentMethod}
-            </ListGroup.Item>
-            <ListGroup.Item>
-              <h2>Order Items </h2>
-              <ListGroup variant='flush'>
-                {cartItems.map(item => (
-                  <ListGroup.Item key={item._id}>
-                    <Row>
-                      <Col md={2}>
-                        <Image src={item.image} alt={item.name} fluid rounded />
-                      </Col>
-                      <Col md={6}>
-                        <Link
-                          to={`/product/${item._id}`}
-                          className='product-title text-dark'
-                          style={{ textDecoration: 'none' }}
-                        >
-                          {item.name}
-                        </Link>
-                      </Col>
-                      <Col md={4}>
-                        {item.qty} x {addCurrency(item.price)} ={' '}
-                        {addCurrency(item.qty * item.price)}
-                      </Col>
-                    </Row>
-                  </ListGroup.Item>
-                ))}
-              </ListGroup>
-            </ListGroup.Item>
-          </ListGroup>
-        </Col>
-        <Col md={4}>
-          <Card>
-            <ListGroup variant='flush'>
-              <ListGroup.Item>
-                <h2>Order Summary</h2>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Row>
-                  <Col>Items:</Col>
-                  <Col>{addCurrency(Number(itemsPrice))}</Col>
-                </Row>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Row>
-                  <Col>Shipping:</Col>
-                  <Col>{addCurrency(Number(shippingPrice))}</Col>
-                </Row>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Row>
-                  <Col>Tax:</Col>
-                  <Col>{addCurrency(Number(taxPrice))}</Col>
-                </Row>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Row>
-                  <Col>Total:</Col>
-                  <Col>{addCurrency(Number(totalPrice))}</Col>
-                </Row>
-              </ListGroup.Item>
-              <ListGroup.Item>
-                <Button
-                  className='w-100'
-                  variant='warning'
-                  disabled={cartItems.length === 0 || isLoading}
-                  onClick={placeOrderHandler}
-                >
-                  Place Order
-                </Button>
-              </ListGroup.Item>
-            </ListGroup>
-          </Card>
-        </Col>
-      </Row>
+      <div className="flex flex-col md:flex-row gap-8">
+        <div className="flex-1">
+          <div className="bg-white rounded shadow p-6 mb-6">
+            <h2 className="text-xl font-bold mb-2">Shipping</h2>
+            <div className="mb-2"><strong>Address:</strong> {shippingAddress.address}, {shippingAddress.city}, {shippingAddress.postalCode}, {shippingAddress.country}</div>
+          </div>
+          <div className="bg-white rounded shadow p-6 mb-6">
+            <h2 className="text-xl font-bold mb-2">Payment Method</h2>
+            <div className="mb-2"><strong>Method:</strong> {paymentMethod}</div>
+          </div>
+          <div className="bg-white rounded shadow p-6">
+            <h2 className="text-xl font-bold mb-2">Order Items</h2>
+            <div className="divide-y">
+              {cartItems.map(item => (
+                <div key={item._id} className="flex items-center py-4 gap-4">
+                  <img src={getImageUrl(item.image)} alt={item.name} className="w-16 h-16 object-contain rounded" />
+                  <Link
+                    to={`/product/${item._id}`}
+                    className="font-semibold text-gray-800 hover:underline flex-1"
+                  >
+                    {item.name}
+                  </Link>
+                  <div>
+                    {item.qty} x {addCurrency(item.price)} = {addCurrency(item.qty * item.price)}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className="w-full md:w-1/3">
+          <div className="bg-white rounded shadow p-6">
+            <h2 className="text-xl font-bold mb-4">Order Summary</h2>
+            <div className="mb-2 flex justify-between">
+              <span>Items:</span>
+              <span>{addCurrency(itemsPrice)}</span>
+            </div>
+            <div className="mb-2 flex justify-between">
+              <span>Shipping:</span>
+              <span>{addCurrency(shippingPrice)}</span>
+            </div>
+            <div className="mb-2 flex justify-between">
+              <span>Tax:</span>
+              <span>{addCurrency(taxPrice)}</span>
+            </div>
+            <div className="mb-4 flex justify-between font-bold">
+              <span>Total:</span>
+              <span>{addCurrency(totalPrice)}</span>
+            </div>
+            <button
+              className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 rounded mb-2"
+              type="button"
+              disabled={cartItems.length === 0}
+              onClick={placeOrderHandler}
+            >
+              Place Order
+            </button>
+            {isLoading && <Loader />}
+          </div>
+        </div>
+      </div>
     </>
   );
 };

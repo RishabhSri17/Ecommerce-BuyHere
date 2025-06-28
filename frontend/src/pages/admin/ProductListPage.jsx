@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Row, Col } from 'react-bootstrap';
-import { LinkContainer } from 'react-router-bootstrap';
+import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FaRupeeSign, FaTrash, FaEdit } from 'react-icons/fa';
-import { useGetProductsQuery } from '../../slices/productsApiSlice';
-import { useDeleteProductMutation } from '../../slices/productsApiSlice';
+import { useGetProductsQuery, useDeleteProductMutation } from '../../slices/productsApiSlice';
 import Loader from '../../components/Loader';
 import Paginate from '../../components/Paginate';
 import Message from '../../components/Message';
@@ -23,17 +21,16 @@ const ProductListPage = () => {
     skip
   });
 
-  const [deleteProduct, { isLoading: isDeleteProductLoading }] =
-    useDeleteProductMutation();
+  const [deleteProduct, { isLoading: isDeleteProductLoading }] = useDeleteProductMutation();
 
   useEffect(() => {
     if (data) {
       setLimit(8);
       setSkip((currentPage - 1) * limit);
       setTotal(data.total);
-      setTotalPage(Math.ceil(total / limit));
+      setTotalPage(Math.ceil(data.total / 8));
     }
-  }, [currentPage, data, limit, total]);
+  }, [currentPage, data]);
 
   const deleteHandler = async productId => {
     try {
@@ -44,25 +41,10 @@ const ProductListPage = () => {
     }
   };
 
-  const pageHandler = pageNum => {
-    if (pageNum >= 1 && pageNum <= totalPage && pageNum !== currentPage) {
-      setCurrentPage(pageNum);
-    }
-  };
-
   return (
     <>
-      <Row className='align-items-center'>
-        <Col>
-          <Meta title={'Product List'} />
-          <h1>Products</h1>
-        </Col>
-        <Col className='text-end'>
-          <LinkContainer to={'/admin/product/create'}>
-            <Button className=' my-3' variant='warning'>Add Product</Button>
-          </LinkContainer>
-        </Col>
-      </Row>
+      <Meta title={'Product List'} />
+      <h2 className="text-2xl font-bold mb-6">Products</h2>
       {isDeleteProductLoading && <Loader />}
       {isLoading ? (
         <Loader />
@@ -71,52 +53,53 @@ const ProductListPage = () => {
           {error?.data?.message || error.error}
         </Message>
       ) : (
-        <Table striped hover bordered responsive size='sm'>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>NAME</th>
-              <th>PRICE</th>
-              <th>CATEGORY</th>
-              <th>BRAND</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.products.map(product => (
-              <tr key={product._id}>
-                <td>{product._id}</td>
-                <td>{product.name}</td>
-                <td>{addCurrency(product.price)}</td>
-                <td>{product.category}</td>
-                <td>{product.brand}</td>
-                <td>
-                  <LinkContainer to={`/admin/product/update/${product._id}`}>
-                    <Button className='btn-sm' variant='light'>
-                      <FaEdit />
-                    </Button>
-                  </LinkContainer>
-
-                  <Button
-                    className='btn-sm'
-                    variant='light'
-                    onClick={() => deleteHandler(product._id)}
-                  >
-                    <FaTrash style={{ color: 'red' }} />
-                  </Button>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-white rounded shadow">
+            <thead>
+              <tr>
+                <th className="px-4 py-2">ID</th>
+                <th className="px-4 py-2">NAME</th>
+                <th className="px-4 py-2">PRICE</th>
+                <th className="px-4 py-2">CATEGORY</th>
+                <th className="px-4 py-2">BRAND</th>
+                <th className="px-4 py-2">ACTIONS</th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
+            </thead>
+            <tbody>
+              {data.products.map(product => (
+                <tr key={product._id} className="text-center border-t">
+                  <td className="px-4 py-2">{product._id}</td>
+                  <td className="px-4 py-2">{product.name}</td>
+                  <td className="px-4 py-2">{addCurrency(product.price)}</td>
+                  <td className="px-4 py-2">{product.category}</td>
+                  <td className="px-4 py-2">{product.brand}</td>
+                  <td className="px-4 py-2 flex justify-center gap-2">
+                    <Link
+                      to={`/admin/product/${product._id}/edit`}
+                      className="inline-block bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm"
+                    >
+                      <FaEdit />
+                    </Link>
+                    <button
+                      onClick={() => deleteHandler(product._id)}
+                      className="inline-block bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
+                    >
+                      <FaTrash />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
-      {totalPage > 1 && (
+      <div className="flex justify-center mt-8">
         <Paginate
           currentPage={currentPage}
           totalPage={totalPage}
-          pageHandler={pageHandler}
+          pageHandler={setCurrentPage}
         />
-      )}
+      </div>
     </>
   );
 };

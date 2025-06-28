@@ -12,11 +12,11 @@ const Meta = ({ title, description, keywords }) => {
 };
 
 Meta.defaultProps = {
-  title: 'MERN Shop | Buy Electronics Online',
+  title: 'BuyHere | Buy Things Online',
   description:
-    'Browse and buy the latest electronic gadgets and devices on our online store. Find great deals on smartphones, laptops, and more. Fast shipping and secure payments.',
+    'Discover a wide range of quality products at competitive prices. Enjoy fast shipping, secure payments, and exceptional customer service.',
   keywords:
-    'electronics, gadgets, smartphones, laptops, online shopping, tech accessories'
+    'online shopping, ecommerce, fashion, home goods, electronics, beauty, deals, discounts'
 };
 
 export default Meta;

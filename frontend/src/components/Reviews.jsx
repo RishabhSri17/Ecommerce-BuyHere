@@ -1,7 +1,6 @@
 import React from 'react';
 import Message from './Message';
 import { Link } from 'react-router-dom';
-import { Button, Form, ListGroup } from 'react-bootstrap';
 import Rating from './Rating';
 
 const Reviews = ({
@@ -15,66 +14,84 @@ const Reviews = ({
   loading
 }) => {
   return (
-    <>
-      <h2>Reviews</h2>
-      {product.reviews.length === 0 && <Message>No Reviews</Message>}
-      <ListGroup variant='flush'>
-        {product.reviews.map(review => (
-          <ListGroup.Item key={review._id}>
-            <strong>{review.name}</strong>
-            <Rating value={review.rating} />
-            <p>{new Date(review.createdAt).toDateString()}</p>
-            <p>{review.comment}</p>
-          </ListGroup.Item>
-        ))}
-        <ListGroup.Item>
-          <h2>Write a Customer Review</h2>
-
-          {userInfo ? (
-            <Form onSubmit={submitHandler}>
-              <Form.Group className='my-2' controlId='rating'>
-                <Form.Label>Rating</Form.Label>
-                <Form.Control
-                  as='select'
-                  required
-                  value={rating}
-                  onChange={e => setRating(e.target.value)}
-                >
-                  <option value=''>Select...</option>
-                  <option value='1'>1 - Poor</option>
-                  <option value='2'>2 - Fair</option>
-                  <option value='3'>3 - Good</option>
-                  <option value='4'>4 - Very Good</option>
-                  <option value='5'>5 - Excellent</option>
-                </Form.Control>
-              </Form.Group>
-              <Form.Group className='my-2' controlId='comment'>
-                <Form.Label>Comment</Form.Label>
-                <Form.Control
-                  as='textarea'
-                  row='3'
-                  required
-                  value={comment}
-                  onChange={e => setComment(e.target.value)}
-                ></Form.Control>
-              </Form.Group>
-              <Button
-                className='w-100'
-                disabled={loading}
-                type='submit'
-                variant='warning'
+    <div className="review mt-8 space-y-6">
+      <h2 className="text-2xl bg-[#f4f4f4] p-2.5 border border-[#ddd] font-bold text-gray-800">Reviews</h2>
+      {product.reviews.length === 0 ? (
+        <Message>No Reviews</Message>
+      ) : (
+        <div className="space-y-6">
+          {product.reviews.map(review => (
+            <div 
+              key={review._id} 
+              className="border-b border-gray-200 pb-6 last:border-0"
+            >
+              <div className="flex justify-between items-start">
+                <div>
+                  <strong className="text-lg font-medium text-gray-900">{review.name}</strong>
+                  <div className="mt-1 flex items-center">
+                    <Rating value={review.rating} />
+                    <span className="ml-2 text-sm text-gray-500">
+                      {new Date(review.createdAt).toDateString()}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <p className="mt-3 text-gray-600">{review.comment}</p>
+            </div>
+          ))}
+        </div>
+      )}
+      <div className="pt-4 border-t border-gray-200">
+        <h2 className="text-xl font-bold text-gray-800 mb-4">Write a Customer Review</h2>
+        {userInfo ? (
+          <form onSubmit={submitHandler} className="space-y-4">
+            <div>
+              <label htmlFor="rating" className="block text-sm font-medium text-gray-700 mb-1">
+                Rating
+              </label>
+              <select
+                id="rating"
+                required
+                value={rating}
+                onChange={e => setRating(e.target.value)}
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors"
               >
-                Submit
-              </Button>
-            </Form>
-          ) : (
-            <Message>
-              Please <Link to='/login'>sign in</Link> to write a review
-            </Message>
-          )}
-        </ListGroup.Item>
-      </ListGroup>
-    </>
+                <option value="">Select...</option>
+                <option value="1">1 - Poor</option>
+                <option value="2">2 - Fair</option>
+                <option value="3">3 - Good</option>
+                <option value="4">4 - Very Good</option>
+                <option value="5">5 - Excellent</option>
+              </select>
+            </div>
+            <div>
+              <label htmlFor="comment" className="block text-sm font-medium text-gray-700 mb-1">
+                Comment
+              </label>
+              <textarea
+                id="comment"
+                rows="4"
+                required
+                value={comment}
+                onChange={e => setComment(e.target.value)}
+                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-colors"
+              ></textarea>
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className={`review-btn w-full py-3 px-4 bg-amber-500 hover:bg-amber-600 text-white font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 mt-2 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+            >
+              {loading ? 'Submitting...' : 'Submit Review'}
+            </button>
+          </form>
+        ) : (
+          <Message>
+            Please <Link to="/login" className="text-blue-600 hover:text-blue-800 font-medium">sign in</Link> to write a review
+          </Message>
+        )}
+      </div>
+    </div>
   );
 };
 
