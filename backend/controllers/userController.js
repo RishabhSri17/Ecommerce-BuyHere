@@ -1,8 +1,8 @@
-import User from '../models/userModel.js';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import { generateToken } from '../utils/generateToken.js';
-import transporter from '../config/email.js';
+const User = require('../models/userModel.js');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { generateToken } = require('../utils/generateToken.js');
+const transporter = require('../config/email.js');
 // @desc     Auth user & get token
 // @method   POST
 // @endpoint /api/users/login
@@ -324,7 +324,7 @@ const resetPassword = async (req, res, next) => {
   }
 };
 
-export {
+module.exports = {
   loginUser,
   registerUser,
   logoutUser,

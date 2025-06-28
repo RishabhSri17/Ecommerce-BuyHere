@@ -1,9 +1,8 @@
-import path from 'path';
-import fs from 'fs';
+const path = require('path');
+const fs = require('fs');
 
-export const deleteFile = filePath => {
-  const __dirname = path.resolve();
-  const imagePath = path.join(__dirname, filePath);
+const deleteFile = filePath => {
+  const imagePath = path.join(path.resolve(), filePath);
 
   if (fs.existsSync(imagePath)) {
     fs.unlink(imagePath, error => {
@@ -16,3 +15,5 @@ export const deleteFile = filePath => {
     console.log('Image does not exits');
   }
 };
+
+module.exports = { deleteFile };

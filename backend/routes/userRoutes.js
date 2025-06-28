@@ -1,5 +1,5 @@
-import express from 'express';
-import {
+const express = require('express');
+const {
   loginUser,
   registerUser,
   logoutUser,
@@ -12,10 +12,10 @@ import {
   admins,
   resetPasswordRequest,
   resetPassword
-} from '../controllers/userController.js';
-import { protect, admin } from '../middleware/authMiddleware.js';
-import validateRequest from '../middleware/validator.js';
-import {body, param} from 'express-validator';
+} = require('../controllers/userController.js');
+const { protect, admin } = require('../middleware/authMiddleware.js');
+const validateRequest = require('../middleware/validator.js');
+const { body, param } = require('express-validator');
 
 const router = express.Router();
 const validator = {
@@ -71,4 +71,4 @@ router
   .put(validator.checkUpdateUser, validateRequest, protect, admin, updateUser)
   .delete(validator.checkGetUserById, validateRequest, protect, admin, deleteUser);
 
-export default router;
+module.exports = router;

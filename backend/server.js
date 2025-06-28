@@ -1,18 +1,18 @@
-import express from 'express';
-import path from 'path';
-import cookieParser from 'cookie-parser';
-import cors from 'cors';
-import compression from 'compression';
-import 'dotenv/config';
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
+const compression = require('compression');
+require('dotenv').config();
 
-import productRoutes from './routes/productRoutes.js';
-import userRoutes from './routes/userRoutes.js';
-import orderRoutes from './routes/orderRoutes.js';
-import uploadRoutes from './routes/uploadRoutes.js';
-import paymentRoutes from './routes/paymentRoutes.js';
+const productRoutes = require('./routes/productRoutes.js');
+const userRoutes = require('./routes/userRoutes.js');
+const orderRoutes = require('./routes/orderRoutes.js');
+const uploadRoutes = require('./routes/uploadRoutes.js');
+const paymentRoutes = require('./routes/paymentRoutes.js');
 
-import connectDB from './config/db.js';
-import { notFound, errorHandler } from './middleware/errorMiddleware.js';
+const connectDB = require('./config/db.js');
+const { notFound, errorHandler } = require('./middleware/errorMiddleware.js');
 
 const port = process.env.PORT || 5000;
 
@@ -25,8 +25,6 @@ app.use(compression());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-const __dirname = path.resolve();
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/api/v1/products', productRoutes);

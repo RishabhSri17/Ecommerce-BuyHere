@@ -1,9 +1,9 @@
-import express from 'express';
+const express = require('express');
 
-import { protect } from '../middleware/authMiddleware.js';
-import { config, order, validate } from '../controllers/paymentController.js';
-import validateRequest from '../middleware/validator.js';
-import {body, check} from 'express-validator';
+const { protect } = require('../middleware/authMiddleware.js');
+const { config, order, validate } = require('../controllers/paymentController.js');
+const validateRequest = require('../middleware/validator.js');
+const { body, check } = require('express-validator');
 
 const router = express.Router();
 
@@ -38,4 +38,4 @@ router.post('/razorpay/order', validator.order, validateRequest, protect, order)
 
 router.post('/razorpay/order/validate', validator.validate, validateRequest, protect, validate);
 
-export default router;
+module.exports = router;

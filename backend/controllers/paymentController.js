@@ -1,5 +1,5 @@
-import crypto from 'crypto';
-import Razorpay from 'razorpay';
+const crypto = require('crypto');
+const Razorpay = require('razorpay');
 
 const config = (req, res) =>
   res.send({
@@ -50,4 +50,8 @@ const validate = (req, res) => {
   });
 };
 
-export { config, order, validate };
+module.exports = {
+  config,
+  order,
+  validate
+};

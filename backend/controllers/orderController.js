@@ -1,4 +1,4 @@
-import Order from '../models/orderModel.js';
+const Order = require('../models/orderModel.js');
 
 // @desc     Create new order
 // @method   POST
@@ -165,7 +165,7 @@ const getOrders = async (req, res, next) => {
   }
 };
 
-export {
+module.exports = {
   addOrderItems,
   getMyOrders,
   getOrderById,

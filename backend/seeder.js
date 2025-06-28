@@ -52,3 +52,8 @@ if (process.argv[2] === '-d') {
 } else {
   importData();
 }
+
+module.exports = {
+  importData,
+  destroyData,
+};

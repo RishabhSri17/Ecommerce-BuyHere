@@ -1,6 +1,6 @@
-import express from 'express';import { body, check } from 'express-validator';
-import multer from 'multer';
-import validateRequest from '../middleware/validator.js';
+const express = require('express');const { body, check } = require('express-validator');
+const multer = require('multer');
+const validateRequest = require('../middleware/validator.js');
 
 const router = express.Router();
 
@@ -39,4 +39,4 @@ router.post('/', upload, (req, res) => {
   });
 });
 
-export default router;
+module.exports = router;

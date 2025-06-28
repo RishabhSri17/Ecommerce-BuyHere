@@ -846,4 +846,4 @@ function shuffleArray(array) {
 }
 shuffleArray(products);
 
-export default products;
+module.exports = products;

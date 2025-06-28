@@ -1,5 +1,5 @@
-import express, { query } from 'express';
-import {
+const express = require('express');
+const {
   getProducts,
   getProduct,
   deleteProduct,
@@ -7,10 +7,10 @@ import {
   updateProduct,
   createProductReview,
   getTopProducts
-} from '../controllers/productController.js';
-import { protect, admin } from '../middleware/authMiddleware.js';
-import validateRequest from '../middleware/validator.js';
-import {body, check, param} from 'express-validator';
+} = require('../controllers/productController.js');
+const { protect, admin } = require('../middleware/authMiddleware.js');
+const validateRequest = require('../middleware/validator.js');
+const { body, check, param } = require('express-validator');
 
 const router = express.Router();
 
@@ -93,4 +93,4 @@ router
   .put(validator.updateProduct, validateRequest, protect, admin, updateProduct)
   .delete(validator.deleteProduct, validateRequest, protect, admin, deleteProduct);
 
-export default router;
+module.exports = router;

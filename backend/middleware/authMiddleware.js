@@ -1,5 +1,5 @@
-import User from '../models/userModel.js';
-import jwt from 'jsonwebtoken';
+const User = require('../models/userModel.js');
+const jwt = require('jsonwebtoken');
 
 // Middleware to protect routes by verifying JWT authentication token.
 const protect = async (req, res, next) => {
@@ -39,4 +39,4 @@ const admin = (req, res, next) => {
   }
 };
 
-export { protect, admin };
+module.exports = { protect, admin };

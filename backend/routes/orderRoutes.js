@@ -1,15 +1,15 @@
-import express from 'express';
-import { protect, admin } from '../middleware/authMiddleware.js';
-import {
+const express = require('express');
+const { protect, admin } = require('../middleware/authMiddleware.js');
+const {
   addOrderItems,
   getMyOrders,
   getOrderById,
   updateOrderToPaid,
   updateOrderToDeliver,
   getOrders
-} from '../controllers/orderController.js';
-import validateRequest from '../middleware/validator.js';
-import { param, check } from 'express-validator';
+} = require('../controllers/orderController.js');
+const validateRequest = require('../middleware/validator.js');
+const { param, check } = require('express-validator');
 
 const router = express.Router();
 
@@ -59,4 +59,4 @@ router.get('/:id', validator.getOrderById, validateRequest, protect, getOrderByI
 router.put('/:id/pay', validator.updateOrderToPaid, validateRequest, protect, updateOrderToPaid);
 router.put('/:id/deliver', validator.updateOrderToDeliver, validateRequest, protect, admin, updateOrderToDeliver);
 
-export default router;
+module.exports = router;

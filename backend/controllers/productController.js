@@ -1,5 +1,5 @@
-import Product from '../models/productModel.js';
-import { deleteFile } from '../utils/file.js';
+const Product = require('../models/productModel.js');
+const { deleteFile } = require('../utils/file.js');
 
 // @desc     Fetch All Products
 // @method   GET
@@ -211,7 +211,7 @@ const createProductReview = async (req, res, next) => {
   }
 };
 
-export {
+module.exports = {
   getProducts,
   getProduct,
   createProduct,
