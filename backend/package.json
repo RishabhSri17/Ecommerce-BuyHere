@@ -11,7 +11,7 @@
     "data:destroy": "node seeder.js -d"
   },
   "dependencies": {
-    "bcrypt": "^s5.1.1",
+    "bcrypt": "^5.1.1",
     "colors": "^1.4.0",
     "compression": "^1.8.0",
     "cookie-parser": "^1.4.7",
