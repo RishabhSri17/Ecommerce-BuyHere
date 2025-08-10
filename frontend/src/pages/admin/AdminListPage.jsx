@@ -1,8 +1,8 @@
 import React from 'react';
 import Meta from '../../components/Meta';
 import { useAdminsQuery } from '../../slices/usersApiSlice';
-import Loader from '../../components/Loader';
-import Message from '../../components/Message';
+import SpinningCubeLoader from '../../components/SpinningCubeLoader';
+import AlertMessage from '../../components/AlertMessage';
 import { Link } from 'react-router-dom';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 
@@ -25,11 +25,11 @@ const AdminListPage = () => {
       </div>
 
       {isLoading ? (
-        <Loader />
+        <SpinningCubeLoader />
       ) : error ? (
-        <Message variant="danger">
+        <AlertMessage variant="danger">
           {error?.data?.message || error.error}
-        </Message>
+        </AlertMessage>
       ) : (
         <div className="overflow-x-auto border rounded-lg">
           <table className="min-w-full divide-y divide-gray-200">

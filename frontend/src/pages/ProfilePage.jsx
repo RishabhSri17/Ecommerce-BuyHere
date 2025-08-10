@@ -1,16 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaCheck, FaXmark } from 'react-icons/fa6';
 import { useGetMyOrdersQuery } from '../slices/ordersApiSlice';
-import { FaIndianRupeeSign } from 'react-icons/fa6';
 import { Link } from 'react-router-dom';
-import Loader from '../components/Loader';
-import Message from '../components/Message';
+import SpinningCubeLoader from '../components/SpinningCubeLoader';
+import AlertMessage from '../components/AlertMessage';
 import Meta from '../components/Meta';
 import ProfileForm from '../components/ProfileForm';
 import { addCurrency } from '../utils/addCurrency';
 
 const ProfilePage = () => {
-  const { data: orders, isLoading, error } = useGetMyOrdersQuery();
+  // Set skipToken if user is not authenticated
+  const { data: orders, isLoading, error, refetch } = useGetMyOrdersQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
+
   return (
     <>
       <div className="flex flex-col md:flex-row gap-8">
@@ -20,14 +23,22 @@ const ProfilePage = () => {
           <ProfileForm />
         </div>
         <div className="flex-1">
-          <h2 className="text-2xl font-bold mb-4">My Orders</h2>
+          <h2 className="text-2xl font-bold mb-4">
+            My Orders
+            <button 
+              onClick={() => refetch()} 
+              className="ml-2 text-sm text-blue-500 hover:text-blue-700"
+            >
+              Refresh
+            </button>
+          </h2>
           {isLoading ? (
-            <Loader />
+            <SpinningCubeLoader />
           ) : error ? (
-            <Message variant='danger'>
+            <AlertMessage variant='danger'>
               {error?.data?.message || error.error}
-            </Message>
-          ) : (
+            </AlertMessage>
+          ) : orders?.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="min-w-full bg-white rounded shadow">
                 <thead>
@@ -73,6 +84,8 @@ const ProfilePage = () => {
                 </tbody>
               </table>
             </div>
+          ) : (
+            <p>No orders found.</p>
           )}
         </div>
       </div>

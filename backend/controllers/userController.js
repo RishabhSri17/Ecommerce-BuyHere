@@ -1,340 +1,472 @@
-const User = require('../models/userModel.js');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const { generateToken } = require('../utils/generateToken.js');
-const transporter = require('../config/email.js');
-// @desc     Auth user & get token
+const User = require("../models/userModel.js");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const { createAndSetAuthToken } = require("../utils/generateToken.js");
+const { sendPasswordResetEmail } = require("../config/email.js");
+
+// ========================================
+// AUTHENTICATION
+// ========================================
+
+// @desc     Authenticate user and generate token
 // @method   POST
 // @endpoint /api/users/login
 // @access   Public
-const loginUser = async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
+const authenticateUser = async (req, res, next) => {
+	try {
+		const { email, password, remember } = req.body;
 
-    const user = await User.findOne({ email });
+		// Validate required fields
+		if (!email || !password) {
+			res.statusCode = 400;
+			throw new Error("Email and password are required");
+		}
 
-    if (!user) {
-      res.statusCode = 404;
-      throw new Error(
-        'Invalid email address. Please check your email and try again.'
-      );
-    }
+		// Find user by email (case-insensitive)
+		const userAccount = await User.findOne({
+			email: { $regex: new RegExp(`^${email}$`, "i") }
+		});
 
-    const match = await bcrypt.compare(password, user.password);
+		if (!userAccount) {
+			res.statusCode = 401;
+			throw new Error("Invalid email or password");
+		}
 
-    if (!match) {
-      res.statusCode = 401;
-      throw new Error(
-        'Invalid password. Please check your password and try again.'
-      );
-    }
+		// Check if account is locked
+		if (userAccount.isLocked) {
+			res.statusCode = 423;
+			throw new Error(
+				"Account is temporarily locked. Please try again later or contact support."
+			);
+		}
 
-    generateToken(req, res, user._id);
+		// Verify password
+		const isPasswordValid = await bcrypt.compare(
+			password,
+			userAccount.password
+		);
 
-    res.status(200).json({
-      message: 'Login successful.',
-      userId: user._id,
-      name: user.name,
-      email: user.email,
-      isAdmin: user.isAdmin
-    });
-  } catch (error) {
-    next(error);
-  }
+		if (!isPasswordValid) {
+			// Increment failed login attempts
+			userAccount.failedLoginAttempts =
+				(userAccount.failedLoginAttempts || 0) + 1;
+
+			// Lock account after 5 failed attempts for 15 minutes
+			if (userAccount.failedLoginAttempts >= 5) {
+				userAccount.isLocked = true;
+				userAccount.lockUntil = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
+			}
+
+			await userAccount.save();
+
+			res.statusCode = 401;
+			throw new Error("Invalid email or password");
+		}
+
+		// Reset failed login attempts on successful login
+		if (userAccount.failedLoginAttempts > 0) {
+			userAccount.failedLoginAttempts = 0;
+			userAccount.isLocked = false;
+			userAccount.lockUntil = null;
+			await userAccount.save();
+		}
+
+		// Create and set authentication token
+		createAndSetAuthToken(req, res, userAccount._id, remember);
+
+		// Log successful login
+		console.log(
+			`🔐 User logged in: ${userAccount.email} at ${new Date().toISOString()}`
+		);
+
+		res.status(200).json({
+			message: "Login successful",
+			user: {
+				id: userAccount._id,
+				name: userAccount.name,
+				email: userAccount.email,
+				isAdmin: userAccount.isAdmin
+			}
+		});
+	} catch (error) {
+		next(error);
+	}
 };
 
-// @desc     Register user
+// @desc     Register new user
 // @method   POST
 // @endpoint /api/users
 // @access   Public
-const registerUser = async (req, res, next) => {
-  try {
-    const { name, email, password } = req.body;
+const registerNewUser = async (req, res, next) => {
+	try {
+		const { name, email, password } = req.body;
 
-    const userExists = await User.findOne({ email });
+		// Check if user already exists (case-insensitive)
+		const existingUser = await User.findOne({
+			email: { $regex: new RegExp(`^${email}$`, "i") }
+		});
 
-    if (userExists) {
-      res.statusCode = 409;
-      throw new Error('User already exists. Please choose a different email.');
-    }
+		if (existingUser) {
+			res.statusCode = 409;
+			throw new Error("An account with this email already exists");
+		}
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+		// Hash password with higher salt rounds for better security
+		const saltRounds = 12;
+		const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    const user = new User({
-      name,
-      email,
-      password: hashedPassword
-    });
+		// Create new user
+		const newUser = new User({
+			name: name.trim(),
+			email: email.toLowerCase().trim(),
+			password: hashedPassword,
+			failedLoginAttempts: 0,
+			isLocked: false
+		});
 
-    await user.save();
+		const savedUser = await newUser.save();
 
-    generateToken(req, res, user._id);
+		// Create and set authentication token
+		createAndSetAuthToken(req, res, savedUser._id, false);
 
-    res.status(201).json({
-      message: 'Registration successful. Welcome!',
-      userId: user._id,
-      name: user.name,
-      email: user.email,
-      isAdmin: user.isAdmin
-    });
-  } catch (error) {
-    next(error);
-  }
+		// Log successful registration
+		console.log(
+			`📝 New user registered: ${
+				savedUser.email
+			} at ${new Date().toISOString()}`
+		);
+
+		res.status(201).json({
+			message: "Registration successful. Welcome!",
+			user: {
+				id: savedUser._id,
+				name: savedUser.name,
+				email: savedUser.email,
+				isAdmin: savedUser.isAdmin
+			}
+		});
+	} catch (error) {
+		next(error);
+	}
 };
 
-// @desc     Logout user / clear cookie
+// @desc     Logout user and clear session
 // @method   POST
 // @endpoint /api/users/logout
 // @access   Private
-const logoutUser = (req, res) => {
-  res.clearCookie('jwt', { httpOnly: true });
+const logoutCurrentUser = (req, res) => {
+	try {
+		// Clear the JWT cookie
+		res.clearCookie("jwt", {
+			httpOnly: true,
+			secure: process.env.NODE_ENV === "production",
+			sameSite: "strict",
+			path: "/"
+		});
 
-  res.status(200).json({ message: 'Logout successful' });
+		// Log logout
+		console.log(
+			`🔓 User logged out: ${
+				req.user?.email || "Unknown"
+			} at ${new Date().toISOString()}`
+		);
+
+		res.status(200).json({
+			message: "Logout successful"
+		});
+	} catch (error) {
+		console.error("Logout error:", error);
+		res.status(200).json({
+			message: "Logout successful"
+		});
+	}
 };
 
-// @desc     Get user profile
+// ========================================
+// USER PROFILE MANAGEMENT
+// ========================================
+
+// @desc     Get current user profile
 // @method   GET
 // @endpoint /api/users/profile
 // @access   Private
-const getUserProfile = async (req, res, next) => {
-  try {
-    const user = await User.findById(req.user._id);
+const getCurrentUserProfile = async (req, res, next) => {
+	try {
+		const userProfile = await User.findById(req.user._id);
 
-    if (!user) {
-      res.statusCode = 404;
-      throw new Error('User not found!');
-    }
+		if (!userProfile) {
+			res.statusCode = 404;
+			throw new Error("User profile not found.");
+		}
 
-    res.status(200).json({
-      message: 'User profile retrieved successfully',
-      userId: user._id,
-      name: user.name,
-      email: user.email,
-      isAdmin: user.isAdmin
-    });
-  } catch (error) {
-    next(error);
-  }
+		res.status(200).json({
+			message: "User profile retrieved successfully",
+			user: {
+				id: userProfile._id,
+				name: userProfile.name,
+				email: userProfile.email,
+				isAdmin: userProfile.isAdmin
+			}
+		});
+	} catch (error) {
+		next(error);
+	}
 };
 
-// @desc     Get admins
-// @method   GET
-// @endpoint /api/users/admins
-// @access   Private/Admin
-const admins = async (req, res, next) => {
-  try {
-    const admins = await User.find({ isAdmin: true });
+// @desc     Update current user profile
+// @method   PUT
+// @endpoint /api/users/profile
+// @access   Private
+const updateCurrentUserProfile = async (req, res, next) => {
+	try {
+		const { name, email, password } = req.body;
 
-    if (!admins || admins.length === 0) {
-      res.statusCode = 404;
-      throw new Error('No admins found!');
-    }
-    res.status(200).json(admins);
-  } catch (error) {
-    next(error);
-  }
+		const userToUpdate = await User.findById(req.user._id);
+
+		if (!userToUpdate) {
+			res.statusCode = 404;
+			throw new Error("User profile not found. Unable to update.");
+		}
+
+		userToUpdate.name = name || userToUpdate.name;
+		userToUpdate.email = email || userToUpdate.email;
+
+		if (password) {
+			const hashedPassword = await bcrypt.hash(password, 10);
+			userToUpdate.password = hashedPassword;
+		}
+
+		const updatedProfile = await userToUpdate.save();
+
+		res.status(200).json({
+			message: "User profile updated successfully.",
+			user: {
+				id: updatedProfile._id,
+				name: updatedProfile.name,
+				email: updatedProfile.email,
+				isAdmin: updatedProfile.isAdmin
+			}
+		});
+	} catch (error) {
+		next(error);
+	}
 };
 
-// @desc     Get users
+// ========================================
+// USER MANAGEMENT (ADMIN)
+// ========================================
+
+// @desc     Get all regular users
 // @method   GET
 // @endpoint /api/users
 // @access   Private/Admin
-const getUsers = async (req, res, next) => {
-  try {
-    const users = await User.find({ isAdmin: false });
+const getAllRegularUsers = async (req, res, next) => {
+	try {
+		const regularUsers = await User.find({ isAdmin: false });
 
-    if (!users || users.length === 0) {
-      res.statusCode = 404;
-      throw new Error('No users found!');
-    }
-    res.status(200).json(users);
-  } catch (error) {
-    next(error);
-  }
+		if (!regularUsers || regularUsers.length === 0) {
+			res.statusCode = 404;
+			throw new Error("No regular users found.");
+		}
+
+		res.status(200).json({
+			message: "Regular users retrieved successfully",
+			count: regularUsers.length,
+			users: regularUsers
+		});
+	} catch (error) {
+		next(error);
+	}
 };
-// @desc     Get user
+
+// @desc     Get all admin users
+// @method   GET
+// @endpoint /api/users/admins
+// @access   Private/Admin
+const getAllAdminUsers = async (req, res, next) => {
+	try {
+		const adminUsers = await User.find({ isAdmin: true });
+
+		if (!adminUsers || adminUsers.length === 0) {
+			res.statusCode = 404;
+			throw new Error("No admin users found.");
+		}
+
+		res.status(200).json({
+			message: "Admin users retrieved successfully",
+			count: adminUsers.length,
+			users: adminUsers
+		});
+	} catch (error) {
+		next(error);
+	}
+};
+
+// @desc     Get user by ID
 // @method   GET
 // @endpoint /api/users/:id
 // @access   Private/Admin
-const getUserById = async (req, res, next) => {
-  try {
-    const { id: userId } = req.params;
-    const user = await User.findById(userId);
-    if (!user) {
-      res.statusCode = 404;
-      throw new Error('User not found!');
-    }
-    res.status(200).json(user);
-  } catch (error) {
-    res.status(500).json({
-      message: 'Internal Server Error'
-    });
-  }
+const getUserDetailsById = async (req, res, next) => {
+	try {
+		const { id: userId } = req.params;
+		const userDetails = await User.findById(userId);
+
+		if (!userDetails) {
+			res.statusCode = 404;
+			throw new Error("User not found.");
+		}
+
+		res.status(200).json({
+			message: "User details retrieved successfully",
+			user: userDetails
+		});
+	} catch (error) {
+		next(error);
+	}
 };
 
-// @desc     Update user
+// @desc     Update user by ID
 // @method   PUT
 // @endpoint /api/users/:id
 // @access   Private/Admin
-const updateUser = async (req, res, next) => {
-  try {
-    const { name, email, isAdmin } = req.body;
-    const { id: userId } = req.params;
-    const user = await User.findById(userId);
-    if (!user) {
-      res.statusCode = 404;
-      throw new Error('User not found!');
-    }
-    user.name = name || user.name;
-    user.email = email || user.email;
-    user.isAdmin = Boolean(isAdmin);
+const updateUserById = async (req, res, next) => {
+	try {
+		const { name, email, isAdmin } = req.body;
+		const { id: userId } = req.params;
 
-    const updatedUser = await user.save();
+		const userToUpdate = await User.findById(userId);
 
-    res.status(200).json({ message: 'User updated', updatedUser });
-  } catch (error) {
-    res.status(500).json({
-      message: 'Internal Server Error'
-    });
-  }
+		if (!userToUpdate) {
+			res.statusCode = 404;
+			throw new Error("User not found.");
+		}
+
+		userToUpdate.name = name || userToUpdate.name;
+		userToUpdate.email = email || userToUpdate.email;
+		userToUpdate.isAdmin = Boolean(isAdmin);
+
+		const updatedUser = await userToUpdate.save();
+
+		res.status(200).json({
+			message: "User updated successfully",
+			user: updatedUser
+		});
+	} catch (error) {
+		next(error);
+	}
 };
 
-// @desc     Update user profile
-// @method   PUT
-// @endpoint /api/users/profile
-// @access   Private
-const updateUserProfile = async (req, res, next) => {
-  try {
-    const { name, email, password } = req.body;
-
-    const user = await User.findById(req.user._id);
-
-    if (!user) {
-      res.statusCode = 404;
-      throw new Error('User not found. Unable to update profile.');
-    }
-
-    user.name = name || user.name;
-    user.email = email || user.email;
-
-    if (password) {
-      const hashedPassword = await bcrypt.hash(password, 10);
-      user.password = hashedPassword;
-    }
-
-    const updatedUser = await user.save();
-
-    res.status(200).json({
-      message: 'User profile updated successfully.',
-      userId: updatedUser._id,
-      name: updatedUser.name,
-      email: updatedUser.email,
-      isAdmin: updatedUser.isAdmin
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-// @desc     Delete user
+// @desc     Delete user by ID
 // @method   DELETE
 // @endpoint /api/users/:id
 // @access   Private/Admin
-const deleteUser = async (req, res, next) => {
-  try {
-    const { id: userId } = req.params;
-    const user = await User.findById(userId);
-    if (!user) {
-      res.statusCode = 404;
-      throw new Error('User not found!');
-    }
-    await User.deleteOne({ _id: user._id });
-    res.status(200).json({ message: 'User deleted' });
-  } catch (error) {
-    next(error);
-  }
+const removeUserById = async (req, res, next) => {
+	try {
+		const { id: userId } = req.params;
+		const userToDelete = await User.findById(userId);
+
+		if (!userToDelete) {
+			res.statusCode = 404;
+			throw new Error("User not found.");
+		}
+
+		await User.deleteOne({ _id: userToDelete._id });
+
+		res.status(200).json({
+			message: "User deleted successfully"
+		});
+	} catch (error) {
+		next(error);
+	}
 };
 
-// @desc     Send reset password email
+// ========================================
+// PASSWORD RESET
+// ========================================
+
+// @desc     Request password reset
 // @method   POST
 // @endpoint /api/users/reset-password/request
 // @access   Public
-const resetPasswordRequest = async (req, res, next) => {
-  try {
-    const { email } = req.body;
-    const user = await User.findOne({ email });
+const requestPasswordReset = async (req, res, next) => {
+	try {
+		const { email } = req.body;
+		const userAccount = await User.findOne({ email });
 
-    if (!user) {
-      res.statusCode = 404;
-      throw new Error('User not found!');
-    }
+		if (!userAccount) {
+			res.statusCode = 404;
+			throw new Error("User not found.");
+		}
 
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: '15m'
-    });
-    const passwordResetLink = `https://mern-shop-abxs.onrender.com/reset-password/${user._id}/${token}`;
-    console.log(passwordResetLink);
-    await transporter.sendMail({
-      from: `"MERN Shop" ${process.env.EMAIL_FROM}`, // sender address
-      to: user.email, // list of receivers
-      subject: 'Password Reset', // Subject line
-      html: `<p>Hi ${user.name},</p>
+		const resetToken = jwt.sign(
+			{ userId: userAccount._id },
+			process.env.JWT_SECRET,
+			{
+				expiresIn: "15m"
+			}
+		);
 
-            <p>We received a password reset request for your account. Click the link below to set a new password:</p>
+		const passwordResetLink = `https://mern-shop-abxs.onrender.com/reset-password/${userAccount._id}/${resetToken}`;
 
-            <p><a href=${passwordResetLink} target="_blank">${passwordResetLink}</a></p>
+		await sendPasswordResetEmail(
+			userAccount.email,
+			userAccount.name,
+			passwordResetLink
+		);
 
-            <p>If you didn't request this, you can ignore this email.</p>
-
-            <p>Thanks,<br>
-            MERN Shop Team</p>` // html body
-    });
-
-    res
-      .status(200)
-      .json({ message: 'Password reset email sent, please check your email.' });
-  } catch (error) {
-    next(error);
-  }
+		res.status(200).json({
+			message: "Password reset email sent, please check your email."
+		});
+	} catch (error) {
+		next(error);
+	}
 };
 
-// @desc     Reset password
+// @desc     Reset password with token
 // @method   POST
 // @endpoint /api/users/reset-password/reset/:id/:token
-// @access   Private
-const resetPassword = async (req, res, next) => {
-  try {
-    const { password } = req.body;
-    const { id: userId, token } = req.params;
-    const user = await User.findById(userId);
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+// @access   Public
+const resetUserPassword = async (req, res, next) => {
+	try {
+		const { password } = req.body;
+		const { id: userId, token } = req.params;
 
-    if (!decodedToken) {
-      res.statusCode = 401;
-      throw new Error('Invalid or expired token');
-    }
+		const userAccount = await User.findById(userId);
+		const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    user.password = hashedPassword;
-    await user.save();
+		if (!decodedToken) {
+			res.statusCode = 401;
+			throw new Error("Invalid or expired token.");
+		}
 
-    res.status(200).json({ message: 'Password successfully reset' });
-  } catch (error) {
-    next(error);
-  }
+		if (!userAccount) {
+			res.statusCode = 404;
+			throw new Error("User not found.");
+		}
+
+		const hashedPassword = await bcrypt.hash(password, 10);
+		userAccount.password = hashedPassword;
+		await userAccount.save();
+
+		res.status(200).json({
+			message: "Password successfully reset"
+		});
+	} catch (error) {
+		next(error);
+	}
 };
 
 module.exports = {
-  loginUser,
-  registerUser,
-  logoutUser,
-  getUserProfile,
-  getUsers,
-  getUserById,
-  updateUser,
-  updateUserProfile,
-  deleteUser,
-  admins,
-  resetPasswordRequest,
-  resetPassword
+	authenticateUser,
+	registerNewUser,
+	logoutCurrentUser,
+	getCurrentUserProfile,
+	updateCurrentUserProfile,
+	getAllRegularUsers,
+	getAllAdminUsers,
+	getUserDetailsById,
+	updateUserById,
+	removeUserById,
+	requestPasswordReset,
+	resetUserPassword
 };

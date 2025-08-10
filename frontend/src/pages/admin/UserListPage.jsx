@@ -6,9 +6,9 @@ import {
   useGetUsersQuery,
   useDeleteUserMutation
 } from '../../slices/usersApiSlice';
-import Loader from '../../components/Loader';
+import SpinningCubeLoader from '../../components/SpinningCubeLoader';
 import { toast } from 'react-toastify';
-import Message from '../../components/Message';
+import AlertMessage from '../../components/AlertMessage';
 import Meta from '../../components/Meta';
 
 const UserListPage = () => {
@@ -28,13 +28,13 @@ const UserListPage = () => {
     <>
       <Meta title={'User List'} />
       <h2 className="text-2xl font-bold mb-6">Users</h2>
-      {isDeleteUserLoading && <Loader />}
+      {isDeleteUserLoading && <SpinningCubeLoader />}
       {isLoading ? (
-        <Loader />
+        <SpinningCubeLoader />
       ) : error ? (
-        <Message variant='danger'>
+        <AlertMessage variant='danger'>
           {error?.data?.message || error.error}
-        </Message>
+        </AlertMessage>
       ) : (
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white rounded shadow">

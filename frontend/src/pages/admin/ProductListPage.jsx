@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FaRupeeSign, FaTrash, FaEdit } from 'react-icons/fa';
 import { useGetProductsQuery, useDeleteProductMutation } from '../../slices/productsApiSlice';
-import Loader from '../../components/Loader';
+import SpinningCubeLoader from '../../components/SpinningCubeLoader';
 import Paginate from '../../components/Paginate';
-import Message from '../../components/Message';
+import AlertMessage from '../../components/AlertMessage';
 import Meta from '../../components/Meta';
 import { addCurrency } from '../../utils/addCurrency';
 
@@ -45,9 +45,9 @@ const ProductListPage = () => {
     <>
       <Meta title={'Product List'} />
       <h2 className="text-2xl font-bold mb-6">Products</h2>
-      {isDeleteProductLoading && <Loader />}
+      {isDeleteProductLoading && <SpinningCubeLoader />}
       {isLoading ? (
-        <Loader />
+        <SpinningCubeLoader />
       ) : error ? (
         <Message variant='danger'>
           {error?.data?.message || error.error}

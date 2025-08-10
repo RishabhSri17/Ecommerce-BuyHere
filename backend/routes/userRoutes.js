@@ -1,74 +1,201 @@
-const express = require('express');
+const express = require("express");
 const {
-  loginUser,
-  registerUser,
-  logoutUser,
-  getUserProfile,
-  updateUserProfile,
-  getUsers,
-  deleteUser,
-  updateUser,
-  getUserById,
-  admins,
-  resetPasswordRequest,
-  resetPassword
-} = require('../controllers/userController.js');
-const { protect, admin } = require('../middleware/authMiddleware.js');
-const validateRequest = require('../middleware/validator.js');
-const { body, param } = require('express-validator');
+	authenticateUser: loginUser,
+	registerNewUser,
+	logoutCurrentUser,
+	getCurrentUserProfile,
+	updateCurrentUserProfile,
+	getAllRegularUsers,
+	removeUserById,
+	updateUserById,
+	getUserDetailsById,
+	getAllAdminUsers,
+	requestPasswordReset,
+	resetUserPassword
+} = require("../controllers/userController.js");
+const {
+	authenticateUser,
+	requireAdminAccess,
+	rateLimitLogin
+} = require("../middleware/authMiddleware.js");
+const validateRequest = require("../middleware/validator.js");
+const { body, param } = require("express-validator");
 
 const router = express.Router();
 const validator = {
-  checkLogin: [
-    body('email').trim().notEmpty().withMessage('Email is Required').bail().isEmail().withMessage("Please enter a valid email address"),
-    body('password').trim().isString().notEmpty().withMessage('Password is Empty')
-  ],
-  checkNewUser: [
-    body('email').trim().notEmpty().withMessage('Email is Required').bail().isEmail().withMessage("Please enter a valid email address"),
-    body('password').trim().isString().notEmpty().withMessage('Password is Empty').bail()
-      .isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
-    body('name').trim().notEmpty().withMessage('Name is Required').escape()
-  ],
-  checkGetUserById: [
-    param('id').exists().withMessage('Id is required').isMongoId().withMessage('Invalid Id')
-  ],
-  checkUpdateUser: [
-    body('email').trim().notEmpty().withMessage('Email is Required').bail().isEmail().withMessage("Please enter a valid email address"),
-    body('name').trim().notEmpty().withMessage('Name is Required').escape(),
-    body('isAdmin').isBoolean().withMessage('isAdmin value should be true/false'),
-    param('id').exists().withMessage('Id is required').isMongoId().withMessage('Invalid Id')
-  ],
-  resetPasswordRequest: [
-    body('email').trim().notEmpty().withMessage('Email is Required').bail().isEmail().withMessage("Please enter a valid email address")
-  ],
-  resetPassword: [
-    body('password').trim().notEmpty().withMessage('Password is Required').escape().bail()
-      .isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
-    param('id').exists().withMessage('Id is required').isMongoId().withMessage('Invalid Id'),
-    param('token').trim().notEmpty().withMessage('Token is Required')
-  ]
-}
-
-router.route('/')
-  .post(validator.checkNewUser, validateRequest, registerUser)
-  .get(protect, admin, getUsers);
-
-router.route('/admins').get(protect, admin, admins);
-
-router.post('/reset-password/request', validator.resetPasswordRequest, validateRequest, resetPasswordRequest);
-router.post('/reset-password/reset/:id/:token', validator.resetPassword, validateRequest, resetPassword);
-router.post('/login', validator.checkLogin, validateRequest, loginUser);
-router.post('/logout', protect, logoutUser);
+	checkLogin: [
+		body("email")
+			.trim()
+			.notEmpty()
+			.withMessage("Email is required")
+			.bail()
+			.isEmail()
+			.withMessage("Please enter a valid email address")
+			.normalizeEmail(),
+		body("password")
+			.trim()
+			.notEmpty()
+			.withMessage("Password is required")
+			.isLength({ min: 1 })
+			.withMessage("Password cannot be empty")
+	],
+	checkNewUser: [
+		body("name")
+			.trim()
+			.notEmpty()
+			.withMessage("Name is required")
+			.isLength({ min: 2, max: 50 })
+			.withMessage("Name must be between 2 and 50 characters")
+			.matches(/^[a-zA-Z\s]+$/)
+			.withMessage("Name can only contain letters and spaces")
+			.escape(),
+		body("email")
+			.trim()
+			.notEmpty()
+			.withMessage("Email is required")
+			.bail()
+			.isEmail()
+			.withMessage("Please enter a valid email address")
+			.normalizeEmail()
+			.isLength({ max: 100 })
+			.withMessage("Email is too long"),
+		body("password")
+			.trim()
+			.notEmpty()
+			.withMessage("Password is required")
+			.isLength({ min: 8 })
+			.withMessage("Password must be at least 8 characters long")
+			.matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/)
+			.withMessage("Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character")
+	],
+	checkGetUserById: [
+		param("id")
+			.exists()
+			.withMessage("User ID is required")
+			.isMongoId()
+			.withMessage("Invalid user ID format")
+	],
+	checkUpdateUser: [
+		body("name")
+			.optional()
+			.trim()
+			.notEmpty()
+			.withMessage("Name cannot be empty")
+			.isLength({ min: 2, max: 50 })
+			.withMessage("Name must be between 2 and 50 characters")
+			.matches(/^[a-zA-Z\s]+$/)
+			.withMessage("Name can only contain letters and spaces")
+			.escape(),
+		body("email")
+			.optional()
+			.trim()
+			.notEmpty()
+			.withMessage("Email cannot be empty")
+			.bail()
+			.isEmail()
+			.withMessage("Please enter a valid email address")
+			.normalizeEmail()
+			.isLength({ max: 100 })
+			.withMessage("Email is too long"),
+		body("isAdmin")
+			.optional()
+			.isBoolean()
+			.withMessage("isAdmin must be true or false"),
+		param("id")
+			.exists()
+			.withMessage("User ID is required")
+			.isMongoId()
+			.withMessage("Invalid user ID format")
+	],
+	resetPasswordRequest: [
+		body("email")
+			.trim()
+			.notEmpty()
+			.withMessage("Email is required")
+			.bail()
+			.isEmail()
+			.withMessage("Please enter a valid email address")
+			.normalizeEmail()
+	],
+	resetPassword: [
+		body("password")
+			.trim()
+			.notEmpty()
+			.withMessage("Password is required")
+			.isLength({ min: 8 })
+			.withMessage("Password must be at least 8 characters long")
+			.matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/)
+			.withMessage("Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character"),
+		param("id")
+			.exists()
+			.withMessage("User ID is required")
+			.isMongoId()
+			.withMessage("Invalid user ID format"),
+		param("token")
+			.trim()
+			.notEmpty()
+			.withMessage("Reset token is required")
+	]
+};
 
 router
-  .route('/profile')
-  .get(protect, getUserProfile)
-  .put(validator.checkNewUser, validateRequest, protect, updateUserProfile);
+	.route("/")
+	.post(validator.checkNewUser, validateRequest, registerNewUser)
+	.get(authenticateUser, requireAdminAccess, getAllRegularUsers);
 
 router
-  .route('/:id')
-  .get(validator.checkGetUserById, validateRequest, protect, admin, getUserById)
-  .put(validator.checkUpdateUser, validateRequest, protect, admin, updateUser)
-  .delete(validator.checkGetUserById, validateRequest, protect, admin, deleteUser);
+	.route("/admins")
+	.get(authenticateUser, requireAdminAccess, getAllAdminUsers);
+
+router.post(
+	"/reset-password/request",
+	validator.resetPasswordRequest,
+	validateRequest,
+	requestPasswordReset
+);
+router.post(
+	"/reset-password/reset/:id/:token",
+	validator.resetPassword,
+	validateRequest,
+	resetUserPassword
+);
+
+// Apply rate limiting to login route
+router.post("/login", rateLimitLogin, validator.checkLogin, validateRequest, loginUser);
+router.post("/logout", authenticateUser, logoutCurrentUser);
+
+router
+	.route("/profile")
+	.get(authenticateUser, getCurrentUserProfile)
+	.put(
+		validator.checkNewUser,
+		validateRequest,
+		authenticateUser,
+		updateCurrentUserProfile
+	);
+
+router
+	.route("/:id")
+	.get(
+		validator.checkGetUserById,
+		validateRequest,
+		authenticateUser,
+		requireAdminAccess,
+		getUserDetailsById
+	)
+	.put(
+		validator.checkUpdateUser,
+		validateRequest,
+		authenticateUser,
+		requireAdminAccess,
+		updateUserById
+	)
+	.delete(
+		validator.checkGetUserById,
+		validateRequest,
+		authenticateUser,
+		requireAdminAccess,
+		removeUserById
+	);
 
 module.exports = router;

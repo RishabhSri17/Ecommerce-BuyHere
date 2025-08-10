@@ -7,8 +7,8 @@ import {
   useUpdateProductMutation,
   useUploadProductImageMutation
 } from '../../slices/productsApiSlice';
-import Loader from '../../components/Loader';
-import Message from '../../components/Message';
+import SpinningCubeLoader from '../../components/SpinningCubeLoader';
+import AlertMessage from '../../components/AlertMessage';
 import Meta from '../../components/Meta';
 
 const ProductFormPage = () => {
@@ -89,11 +89,11 @@ const ProductFormPage = () => {
       </Link>
 
       {isLoadingState ? (
-        <Loader />
+        <SpinningCubeLoader />
       ) : error ? (
-        <Message variant="danger">
+        <AlertMessage variant="danger">
           {error?.data?.message || error.error}
-        </Message>
+        </AlertMessage>
       ) : (
         <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-6">
           <h1 className="text-2xl font-bold text-gray-800 mb-6">

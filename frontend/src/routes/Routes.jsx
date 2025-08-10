@@ -12,7 +12,7 @@ import PaymentPage from '../pages/PaymentPage';
 import PlaceOrderPage from '../pages/PlaceOrderPage';
 import OrderDetailsPage from '../pages/OrderDetailsPage';
 import ProfilePage from '../pages/ProfilePage';
-import AdminRoute from '../components/AdminRoute';
+import ProtectedAdminRoute from '../components/AdminRoute';
 import OrderListPage from '../pages/admin/OrderListPage';
 import ProductListPage from '../pages/admin/ProductListPage';
 import UserListPage from '../pages/admin/UserListPage';
@@ -48,7 +48,7 @@ const router = createBrowserRouter([
         element: <CartPage />
       },
       {
-        path: '/reset-password',
+        path: '/reset-password-request',
         element: <ResetPasswordRequestPage />
       },
       {
@@ -101,7 +101,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '',
-        element: <AdminRoute />,
+        element: <ProtectedAdminRoute />,
         children: [
           {
             path: '/admin/dashboard',

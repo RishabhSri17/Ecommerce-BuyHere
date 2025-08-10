@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { FaIndianRupeeSign, FaXmark } from 'react-icons/fa6';
 import { FaCheck } from 'react-icons/fa';
 import { useGetOrdersQuery } from '../../slices/ordersApiSlice';
-import Loader from '../../components/Loader';
-import Message from '../../components/Message';
+import SpinningCubeLoader from '../../components/SpinningCubeLoader';
+import AlertMessage from '../../components/AlertMessage';
 import Meta from '../../components/Meta';
 import { useSelector } from 'react-redux';
 import { addCurrency } from '../../utils/addCurrency';
@@ -19,11 +19,11 @@ const OrderListsPage = () => {
       <h2 className="text-2xl font-bold text-gray-800 mb-6">Orders</h2>
       
       {isLoading ? (
-        <Loader />
+        <SpinningCubeLoader />
       ) : error ? (
-        <Message variant="danger">
+        <AlertMessage variant="danger">
           {error?.data?.message || error.error}
-        </Message>
+        </AlertMessage>
       ) : (
         <div className="overflow-x-auto border rounded-lg shadow-sm">
           <table className="min-w-full divide-y divide-gray-200">
