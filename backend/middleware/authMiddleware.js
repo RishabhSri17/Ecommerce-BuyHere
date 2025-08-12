@@ -11,7 +11,6 @@ const jwt = require("jsonwebtoken");
 const authenticateUser = async (req, res, next) => {
 	try {
 		const authToken = req.cookies.jwt;
-
 		if (!authToken) {
 			res.statusCode = 401;
 			throw new Error("Authentication required. Please log in.");

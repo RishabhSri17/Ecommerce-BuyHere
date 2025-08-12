@@ -1,15 +1,16 @@
 import { ORDERS_URL, RAZORPAY_URL } from "../constants";
-import { apiSlice } from "./apiSlice";
+import {apiSlice} from "./apiSlice";
+import { baseApiSlice } from "./baseApiSlice";
 
-export const ordersApiSlice = apiSlice.injectEndpoints({
+export const ordersApiSlice =  baseApiSlice.injectEndpoints({
 	endpoints: (builder) => ({
 		createOrder: builder.mutation({
 			query: (order) => ({
 				url: ORDERS_URL,
 				method: "POST",
-				body: { ...order }
+				body: { ...order },
 			}),
-			invalidatesTags: ["Order"]
+			invalidatesTags:["Order"]
 		}),
 		getOrderDetails: builder.query({
 			query: (orderId) => ({
@@ -50,7 +51,8 @@ export const ordersApiSlice = apiSlice.injectEndpoints({
 				url: `${RAZORPAY_URL}/razorpay/order`,
 				method: "POST",
 				body: orderData
-			})
+			}),
+			invalidatesTags: ["Order"]
 		}),
 		validateRazorpayPayment: builder.mutation({
 			query: (paymentData) => ({

@@ -22,7 +22,7 @@ import { BASE_URL } from "../constants";
 
 const OrderDetailsPage = () => {
 	const { id: orderId } = useParams();
-	const { data: order, isLoading, error } = useGetOrderDetailsQuery(orderId);
+	const { data: { message, order } = {} , isLoading, error } = useGetOrderDetailsQuery(orderId);
 	const [payOrder, { isLoading: isPayOrderLoading }] = usePayOrderMutation();
 	const [updateDeliver, { isLoading: isUpdateDeliverLoading }] =
 		useUpdateDeliverMutation();
@@ -32,6 +32,7 @@ const OrderDetailsPage = () => {
 	const [validateRazorpayPayment] = useValidateRazorpayPaymentMutation();
 
 	const paymentHandler = async (e) => {
+		
 		try {
 			// Safety check for orderId
 			if (!orderId) {
@@ -56,12 +57,10 @@ const OrderDetailsPage = () => {
 				currency: "INR",
 				receipt: `receipt#${orderId}`
 			};
-
 			// Create Razorpay order using API slice
-			const { data: razorpayOrderData } = await createRazorpayOrder(
-				razorpayData
-			).unwrap();
-			const { order: razorpayOrder } = razorpayOrderData;
+			const res = await createRazorpayOrder(razorpayData)
+			const { message , order: razorpayOrder } = res.data;
+			
 
 			const options = {
 				key: razorpayApiKey?.config?.razorpayKeyId,
@@ -74,9 +73,8 @@ const OrderDetailsPage = () => {
 				handler: async (response) => {
 					try {
 						// Validate payment using API slice
-						const { data: validationData } = await validateRazorpayPayment(
-							response
-						).unwrap();
+						const res = await validateRazorpayPayment(response)
+						const validationData = res.data;
 						const details = {
 							id: validationData.result.id,
 							status: validationData.result.status,
@@ -100,8 +98,13 @@ const OrderDetailsPage = () => {
 					color: "#FFC107"
 				}
 			};
+
+			/* console.log("reached Here !!!") */
+			/* console.log("Razorpay object:", window.Razorpay); */
 			var rzp1 = new window.Razorpay(options);
+			/* console.log("reached Here Too!!!") */
 			rzp1.open();
+
 		} catch (error) {
 			toast.error(error?.data?.message || error.error);
 		}
@@ -124,6 +127,14 @@ const OrderDetailsPage = () => {
 		}
 		return image;
 	};
+
+
+	useEffect(() => {
+		const script = document.createElement("script");
+		script.src = "https://checkout.razorpay.com/v1/checkout.js";
+		script.async = true;
+		document.body.appendChild(script);
+	}, []);
 
 	return (
 		<>

@@ -19,15 +19,14 @@ const ProductPage = () => {
 	const [qty, setQty] = useState(1);
 	const [rating, setRating] = useState(0);
 	const [comment, setComment] = useState("");
-
 	const { userInfo } = useSelector((state) => state.auth);
-
+	
 	const {
-		data: product,
+		 data: { message, product } = {},
 		isLoading,
 		error
 	} = useGetProductDetailsQuery(productId);
-
+	
 	const [createProductReview, { isLoading: isCreateProductReviewLoading }] =
 		useCreateProductReviewMutation();
 

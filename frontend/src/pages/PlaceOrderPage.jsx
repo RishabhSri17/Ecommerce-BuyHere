@@ -30,6 +30,9 @@ const PlaceOrderPage = () => {
 		totalPrice
 	} = useSelector((state) => state.cart);
 
+
+
+
 	// Safety check for cartItems
 	const safeCartItems = cartItems || [];
 	const [createOrder, { isLoading }] = useCreateOrderMutation();
@@ -47,22 +50,26 @@ const PlaceOrderPage = () => {
 	}, [shippingAddress, paymentMethod, navigate]);
 
 	const placeOrderHandler = async () => {
-		try {
-			const res = await createOrder({
-				cartItems: safeCartItems,
-				shippingAddress,
-				paymentMethod,
-				itemsPrice,
-				taxPrice,
-				shippingPrice,
-				totalPrice
-			}).unwrap();
-			dispatch(clearCartItems());
-			navigate(`/order/${res._id}`);
-		} catch (error) {
-			toast.error(error?.data?.message || error.error);
+		const payload = {
+			cartItems: safeCartItems,
+			shippingAddress,
+			paymentMethod,
+			itemsPrice,
+			taxPrice,
+			shippingPrice,
+			totalPrice
+		};
+		const result = await createOrder(payload)
+		if (result.error) {
+			toast.error(result.error.data?.message || result.error.error);
+			return;
 		}
+		console.log("Order created successfully:", result);
+		dispatch(clearCartItems());
+		navigate(`/order/${result.data.order._id}`);
 	};
+
+
 	return (
 		<>
 			<CheckoutProgressIndicator

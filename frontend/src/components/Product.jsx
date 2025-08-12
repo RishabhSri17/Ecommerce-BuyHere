@@ -6,6 +6,7 @@ import { addToCart } from '../slices/cartSlice';
 import Rating from './Rating';
 
 const Product = ({ product }) => {
+  /* console.log(product); */
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

@@ -9,54 +9,53 @@ const Order = require("../models/orderModel.js");
 // @endpoint /api/v1/orders
 // @access   Private
 const createNewOrder = async (req, res, next) => {
-	try {
-		const {
-			cartItems,
-			shippingAddress,
-			paymentMethod,
-			itemsPrice,
-			taxPrice,
-			shippingPrice,
-			totalPrice
-		} = req.body;
+    try {
+        const {
+            cartItems,
+            shippingAddress,
+            paymentMethod,
+            itemsPrice,
+            taxPrice,
+            shippingPrice,
+            totalPrice
+        } = req.body;
 
-		// Validate order data
-		if (!cartItems || cartItems.length === 0) {
-			res.statusCode = 400;
-			throw new Error("No order items provided.");
-		}
+        if (!cartItems || cartItems.length === 0) {
+            res.statusCode = 400;
+            throw new Error("No order items provided.");
+        }
 
-		if (!shippingAddress || !paymentMethod) {
-			res.statusCode = 400;
-			throw new Error("Shipping address and payment method are required.");
-		}
+        if (!shippingAddress || !paymentMethod) {
+            res.statusCode = 400;
+            throw new Error("Shipping address and payment method are required.");
+        }
 
-		// Create order with mapped cart items
-		const orderData = {
-			user: req.user._id,
-			orderItems: cartItems.map((cartItem) => ({
-				...cartItem,
-				product: cartItem._id
-			})),
-			shippingAddress,
-			paymentMethod,
-			itemsPrice,
-			taxPrice,
-			shippingPrice,
-			totalPrice
-		};
+        const orderData = {
+            user: req.user._id,
+            orderItems: cartItems.map((cartItem) => ({
+                ...cartItem,
+                product: cartItem._id
+            })),
+            shippingAddress,
+            paymentMethod,
+            itemsPrice,
+            taxPrice,
+            shippingPrice,
+            totalPrice
+        };
 
-		const newOrder = new Order(orderData);
-		const savedOrder = await newOrder.save();
+        const newOrder = new Order(orderData);
+        const savedOrder = await newOrder.save();
 
-		res.status(201).json({
-			message: "Order created successfully",
-			order: savedOrder
-		});
-	} catch (error) {
-		next(error);
-	}
+        res.status(201).json({
+            message: "Order created successfully",
+            order: savedOrder
+        });
+    } catch (error) {
+        next(error);
+    }
 };
+
 
 // ========================================
 // ORDER RETRIEVAL
@@ -115,7 +114,7 @@ const getUserOrders = async (req, res, next) => {
 const getOrderDetails = async (req, res, next) => {
 	try {
 		const { id: orderId } = req.params;
-
+		
 		const orderDetails = await Order.findById(orderId).populate(
 			"user",
 			"name email"
@@ -125,7 +124,6 @@ const getOrderDetails = async (req, res, next) => {
 			res.statusCode = 404;
 			throw new Error("Order not found.");
 		}
-
 		res.status(200).json({
 			message: "Order details retrieved successfully",
 			order: orderDetails
@@ -144,6 +142,7 @@ const getOrderDetails = async (req, res, next) => {
 // @endpoint /api/v1/orders/:id/pay
 // @access   Private
 const markOrderAsPaid = async (req, res, next) => {
+	console.log("Payorder Function called ")
 	try {
 		const { id: orderId } = req.params;
 		const { id: paymentId, status, updateTime, email } = req.body;
