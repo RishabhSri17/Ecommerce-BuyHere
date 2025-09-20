@@ -24,7 +24,6 @@ connectDB();
 
 // Test email connection on startup
 testEmailConnection().catch(console.error);
-
 const app = express();
 
 // Enhanced CORS configuration - Allow all origins
