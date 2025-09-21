@@ -43,7 +43,8 @@ const createAndSetAuthToken = (req, res, userId, remember = false) => {
 		const cookieOptions = {
 			httpOnly: true,
 			secure: process.env.NODE_ENV === "production",
-			sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+			sameSite: "none",
+			/* sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax", */
 			maxAge: cookieMaxAge,
 			path: "/",
 			domain:
